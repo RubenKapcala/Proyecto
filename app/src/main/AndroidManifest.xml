@@ -10,6 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/miEstilo">
         <activity
+            android:name=".vistas.JuegoActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".vistas.SalaEsperaActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".vistas.BuacarPartidaActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".vistas.CrearPartidaActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".vistas.MenuActivity"
             android:screenOrientation="landscape" />
         <activity

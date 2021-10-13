@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Proyecto_1S2122</string>
+    <string name="crear_partida">Crear partida</string>
+    <string name="unirse_a_partida">Unirse a partida</string>
+    <string name="estadisticas">Estadísticas</string>
+
 </resources>

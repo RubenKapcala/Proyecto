@@ -34,14 +34,14 @@ class MainActivity : AppCompatActivity() {
 
 
         //Creamos una animación para cada atributo que queremos animar de la imagen de presentación
-        val aniRota = ObjectAnimator.ofFloat(binding.imagenPresentacion, "rotation", 0f, 180f, 360f, 360f, 180f, 0f, 0f)
-        aniRota.duration = 2500
+        val aniRota = ObjectAnimator.ofFloat(binding.imagenPresentacion, "rotation", 0f, 360f, 0f)
+        aniRota.duration = 2000
         val aniAlfa = ObjectAnimator.ofFloat(binding.imagenPresentacion, View.ALPHA, 0f, 0.6f, 1f, 1f)
-        aniAlfa.duration = 2000
+        aniAlfa.duration = 1500
         val aniX = ObjectAnimator.ofFloat(binding.imagenPresentacion, "x", 0f, an * 0.2f, 0f, an * 0.2f, an * 0.05f, an * 0.15f, an * 0.15f)
-        aniX.duration = 3000
+        aniX.duration = 2500
         val aniY = ObjectAnimator.ofFloat(binding.imagenPresentacion, "y", 0f, al * 0.2f, 0f, al * 0.2f, al * 0.05f, al * 0.15f, al * 0.15f)
-        aniY.duration = 3000
+        aniY.duration = 2500
 
         //Las unimos en un AnimationSet para iniciarlas a la vez
         val animSet = AnimatorSet()
@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
                 aniAlfa.addListener(onEnd = {
                     startActivity(Intent(this, MenuActivity::class.java))
+                    finish()
 
                 })
             })
