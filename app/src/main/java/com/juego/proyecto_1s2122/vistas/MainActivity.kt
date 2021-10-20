@@ -2,6 +2,7 @@ package com.juego.proyecto_1s2122.vistas
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -11,16 +12,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
 import com.juego.proyecto_1s2122.databinding.ActivityMainBinding
 import com.juego.proyecto_1s2122.databinding.ActivityMenuBinding
+import com.juego.proyecto_1s2122.varios.App
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        App.activity = this
         mostrarBienvenida()
     }
 

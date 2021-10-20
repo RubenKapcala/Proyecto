@@ -1,7 +1,23 @@
 <resources>
     <string name="app_name">Proyecto_1S2122</string>
+    <string name="confirmar">confirmar</string>
+    <string name="atras">atrás</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="activar">Activar</string>
+
     <string name="crear_partida">Crear partida</string>
     <string name="unirse_a_partida">Unirse a partida</string>
     <string name="estadisticas">Estadísticas</string>
+    <string name="sin_bluetooth">Dispositivo sin Bluetooth</string>
+    <string name="sin_bluetooth_descripcion">El dispositivo necesita tener bluetooth para poder usar esta aplicación</string>
+
+    <string name="njugadores">Nº JUGADORES</string>
+    <string name="juego">JUEGO</string>
+    <string name="reglas_del_juego">REGLAS DEL JUEGO</string>
+
+    <string name="reintentar">reintentar</string>
+    <string name="dispisitivos_encontrados">DISPISITIVOS ENCONTRADOS</string>
+    <string name="ya_buscando">Ya se esta realizando la búsqueda</string>
+    <string name="partidas_encontradas">PARTIDAS ENCONTRADAS</string>
 
 </resources>
