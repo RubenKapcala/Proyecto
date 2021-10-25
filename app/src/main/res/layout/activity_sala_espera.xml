@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_reintentar"
         app:layout_constraintEnd_toEndOf="@+id/btn_confirmar"
         app:layout_constraintHeight_percent="0.6"
-        app:layout_constraintTop_toTopOf="@+id/recyclerView2"
+        app:layout_constraintTop_toTopOf="@+id/rv_listaJugadores"
         app:layout_constraintWidth_percent="0.37">
 
         <TextView
@@ -44,7 +44,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView2"
+        android:id="@+id/rv_listaJugadores"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryDark"

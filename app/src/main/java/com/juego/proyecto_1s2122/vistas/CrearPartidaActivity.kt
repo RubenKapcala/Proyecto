@@ -1,28 +1,13 @@
 package com.juego.proyecto_1s2122.vistas
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityCrearPartidaBinding
 import com.juego.proyecto_1s2122.modelo.Juego
 import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
-import com.juego.proyecto_1s2122.varios.App
 import com.juego.proyecto_1s2122.varios.MiBluetooth
-import java.io.Serializable
 import java.util.*
 
 class CrearPartidaActivity : AppCompatActivity() {
@@ -80,8 +65,9 @@ class CrearPartidaActivity : AppCompatActivity() {
         binding.btnAtras.setOnClickListener {finish()}
 
         binding.btnConfirmar.setOnClickListener{
-            App.partida = crearPartida(juegoElegido, nJugadores)
+            var partida = crearPartida(juegoElegido, nJugadores)
             val intent = Intent(this, SalaEsperaActivity::class.java)
+            intent.putExtra("partida", partida)
             startActivity(intent)
         }
     }
@@ -94,7 +80,7 @@ class CrearPartidaActivity : AppCompatActivity() {
 
 
     private fun crearPartida(juegoElegido: Int, jugadores: Int): Partida {
-        return Partida(mutableListOf(Jugador("ruben", 0, 0, "")), listaJuegos[juegoElegido], jugadores, Date(System.currentTimeMillis()))
+        return Partida(mutableListOf(Jugador(MiBluetooth.bluetoothAdapter?.name!!, 0, 0, MiBluetooth.bluetoothAdapter?.address!!)), listaJuegos[juegoElegido], jugadores, Date(System.currentTimeMillis()))
     }
 
     //esto ya lo ire haciendo

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityMenuBinding
-import com.juego.proyecto_1s2122.varios.App
 import com.juego.proyecto_1s2122.varios.MiBluetooth
 
 class MenuActivity : AppCompatActivity() {
@@ -17,7 +16,6 @@ class MenuActivity : AppCompatActivity() {
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        App.activity = this
 
         if (!MiBluetooth.esBluetooth){
             val builder = AlertDialog.Builder(this)
@@ -27,21 +25,20 @@ class MenuActivity : AppCompatActivity() {
             builder.setPositiveButton(R.string.aceptar) { _, _ -> finish() }
             builder.show()
         }else{
-            MiBluetooth.iniciarConexionSegura(this)
+            MiBluetooth.activarBluetooth(this)
         }
 
 
         binding.btnCrearPartida.setOnClickListener { startActivity(Intent(this, CrearPartidaActivity::class.java)) }
-        binding.btnUnirsePartida.setOnClickListener { startActivity(Intent(this, BuacarPartidaActivity::class.java)) }
-        binding.btnEstadisticas.setOnClickListener { startActivity(Intent(this, PruebaBuena::class.java)) }
+        binding.btnUnirsePartida.setOnClickListener { startActivity(Intent(this, BuscarPartidaActivity::class.java)) }
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MiBluetooth.REQUEST_ENABLE_BT) {
+        if (requestCode == MiBluetooth.REQUEST_ENABLE_BLUETOOTH) {
             if (resultCode != RESULT_OK) {
-                MiBluetooth.activar(this)
+                MiBluetooth.activarBluetooth(this)
             }
         }
     }

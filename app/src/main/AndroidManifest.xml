@@ -23,7 +23,7 @@
             android:name=".vistas.SalaEsperaActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".vistas.BuacarPartidaActivity"
+            android:name=".vistas.BuscarPartidaActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".vistas.CrearPartidaActivity"

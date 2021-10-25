@@ -2,17 +2,14 @@ package com.juego.proyecto_1s2122.vistas
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
 import com.juego.proyecto_1s2122.databinding.ActivityMainBinding
-import com.juego.proyecto_1s2122.databinding.ActivityMenuBinding
-import com.juego.proyecto_1s2122.varios.App
+import com.juego.proyecto_1s2122.varios.MiBluetooth
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        App.activity = this
         mostrarBienvenida()
     }
 
