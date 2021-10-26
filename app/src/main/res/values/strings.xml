@@ -14,10 +14,14 @@
     <string name="njugadores">Nº JUGADORES</string>
     <string name="juego">JUEGO</string>
     <string name="reglas_del_juego">REGLAS DEL JUEGO</string>
+    <string name="jugadores">Jugadores</string>
 
     <string name="reintentar">reintentar</string>
     <string name="dispisitivos_encontrados">DISPISITIVOS ENCONTRADOS</string>
     <string name="ya_buscando">Ya se esta realizando la búsqueda</string>
     <string name="partidas_encontradas">PARTIDAS ENCONTRADAS</string>
+
+    <string name="go">GO</string>
+    <string name="fin">Fin</string>
 
 </resources>

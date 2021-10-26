@@ -1,11 +1,13 @@
 package com.juego.proyecto_1s2122.modelo
 
-import android.bluetooth.BluetoothDevice
+import com.google.gson.Gson
+import com.juego.proyecto_1s2122.varios.MiBluetooth
 import java.io.Serializable
 
 data class Jugador(
         val nombre: String,
         var puntos: Int,
         var posicion: Int,
-        val addressDevice: String
-): Serializable
+        val alias: String
+): Serializable, Transformable
+

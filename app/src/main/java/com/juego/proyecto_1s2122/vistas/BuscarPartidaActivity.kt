@@ -33,7 +33,6 @@ class BuscarPartidaActivity : AppCompatActivity() {
         binding.btnReintentar.setOnClickListener {
             buscarDispositivos()
         }
-
     }
 
     private fun buscarDispositivos(){
@@ -63,7 +62,6 @@ class BuscarPartidaActivity : AppCompatActivity() {
                 Toast.makeText(this@BuscarPartidaActivity, R.string.ya_buscando, Toast.LENGTH_LONG).show()
             }
 
-
         })
     }
 
@@ -79,13 +77,8 @@ class BuscarPartidaActivity : AppCompatActivity() {
                 val intent = Intent(this, SalaEsperaActivity::class.java)
                 startActivity(intent)
             }
-
+            else -> {}
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMensaje(bluetoothMensaje: MiBluetooth.MensajeBluetooth) {
-        Toast.makeText(this, bluetoothMensaje.mensaje, Toast.LENGTH_LONG).show()
     }
 
     override fun onResume() {

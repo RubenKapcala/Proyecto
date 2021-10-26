@@ -1,13 +1,15 @@
 package com.juego.proyecto_1s2122.vistas
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.juego.proyecto_1s2122.databinding.ActivityCrearPartidaBinding
 import com.juego.proyecto_1s2122.modelo.Juego
 import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
 import com.juego.proyecto_1s2122.varios.MiBluetooth
+import java.net.NetworkInterface
+import java.text.SimpleDateFormat
 import java.util.*
 
 class CrearPartidaActivity : AppCompatActivity() {
@@ -65,7 +67,7 @@ class CrearPartidaActivity : AppCompatActivity() {
         binding.btnAtras.setOnClickListener {finish()}
 
         binding.btnConfirmar.setOnClickListener{
-            var partida = crearPartida(juegoElegido, nJugadores)
+            val partida = crearPartida(juegoElegido, nJugadores)
             val intent = Intent(this, SalaEsperaActivity::class.java)
             intent.putExtra("partida", partida)
             startActivity(intent)
@@ -80,7 +82,9 @@ class CrearPartidaActivity : AppCompatActivity() {
 
 
     private fun crearPartida(juegoElegido: Int, jugadores: Int): Partida {
-        return Partida(mutableListOf(Jugador(MiBluetooth.bluetoothAdapter?.name!!, 0, 0, MiBluetooth.bluetoothAdapter?.address!!)), listaJuegos[juegoElegido], jugadores, Date(System.currentTimeMillis()))
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("ES"))
+        val currentDate = sdf.format(Date())
+        return Partida(mutableListOf(Jugador("la polla", 0, 0, "el que te foca")), listaJuegos[juegoElegido], jugadores, currentDate)
     }
 
     //esto ya lo ire haciendo

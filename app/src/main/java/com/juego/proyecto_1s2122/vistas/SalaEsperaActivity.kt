@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivitySalaEsperaBinding
 import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
@@ -30,29 +31,46 @@ class SalaEsperaActivity : AppCompatActivity() {
         binding.rvListaJugadores.layoutManager = LinearLayoutManager(this)
 
         binding.btnAtras.setOnClickListener { finish() }
-        binding.btnConfirmar.setOnClickListener{ startActivity(Intent(this, JuegoActivity::class.java)) }
+        binding.btnConfirmar.setOnClickListener{ startActivity(Intent(this, JuegoPulsarActivity::class.java)) }
 
         partida = intent.getSerializableExtra("partida") as Partida?
 
 
         if (partida != null) {
             visibilizarDispositivo()
-            binding.rvListaJugadores.adapter = JugadoresAdapter(partida!!.jugadores)
+            ajustarVistasAPartida(partida!!)
         }
 
     }
 
-    fun visibilizarDispositivo(){
-        MiBluetooth.visibilizar(this, object : MiBluetooth.VisibilizarDispositivoInterface {
+    private fun visibilizarDispositivo(){
+        MiBluetooth.visibilizar(this)
+    }
 
-            override fun alEmpezar() {}
+    private fun ajustarVistasAPartida(partida: Partida){
+        binding.rvListaJugadores.adapter = JugadoresAdapter(partida.jugadores)
+        binding.tvNombreJuego.text = partida.juego.nombre
+        binding.tvDescripcionJuego.text = partida.juego.descripcion
+        val texto = "" + partida.jugadores.size + "/" + partida.nJugadores + " " + getString(R.string.jugadores)
+        binding.tvNJugadores.text = texto
+    }
 
-            override fun alTerminar() {
-                Toast.makeText(this@SalaEsperaActivity, partida!!.nJugadores.toString(), Toast.LENGTH_LONG).show()
-
+    private fun iniciarPartida() {
+        var intent = Intent()
+        when(partida?.juego?.nombre){
+            "pulsar" -> {
+                intent = Intent(this, JuegoPulsarActivity::class.java)
             }
+            "frotar" -> {
+                intent = Intent(this, JuegoFrotarActivity::class.java)
+            }
+            "explotar" -> {
+                intent = Intent(this, JuegoExplotarActivity::class.java)
+            }
+        }
+        intent.putExtra("partida", partida)
+        startActivity(intent)
 
-        })
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -61,43 +79,49 @@ class SalaEsperaActivity : AppCompatActivity() {
         when(estado){
             MiBluetooth.Estado.STATE_LISTENING -> Toast.makeText(this, "Listening", Toast.LENGTH_LONG).show()
             MiBluetooth.Estado.STATE_CONNECTION_FAILED -> Toast.makeText(this, "Connection Failed", Toast.LENGTH_LONG).show()
-            MiBluetooth.Estado.STATE_CONNECTED -> {
-                Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show()
-
-            }
+            MiBluetooth.Estado.STATE_CONNECTED -> Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show()
+            else -> {}
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventNuevoDispositivoVinculado(nuevoDispositivo: MiBluetooth.NuevoDispositivoVinculado) {
-        if (partida!!.jugadores.size < partida!!.nJugadores -1){
-            partida?.jugadores?.add(Jugador(nuevoDispositivo.dispositivo.name, 0, 0, nuevoDispositivo.dispositivo.address))
-            binding.rvListaJugadores.adapter = JugadoresAdapter(partida!!.jugadores)
-            val gson = Gson()
-            val json: String = gson.toJson(partida)
-            MiBluetooth.enviarDatos(json)
-            visibilizarDispositivo()
-        }else{
-            val intent = Intent(this, JuegoActivity::class.java)
-            startActivity(intent)
+    fun onEventNuevoJugadorVinculado(jugador: Jugador) {
+        partida?.jugadores?.add(jugador)
+        ajustarVistasAPartida(partida!!)
+        MiBluetooth.enviarDatos(partida!!.toJson(), MiBluetooth.TipoDatoTransmitido.PARTIDA)
+        visibilizarDispositivo()
+        if (partida!!.jugadores.size >= partida!!.nJugadores -1){
+            MiBluetooth.enviarDatos(MiBluetooth.Evento.INICIAR_PARTIDA.toJson(), MiBluetooth.TipoDatoTransmitido.EVENTO)
+            iniciarPartida()
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMensaje(bluetoothMensaje: MiBluetooth.MensajeBluetooth) {
-        Toast.makeText(this, bluetoothMensaje.mensaje, Toast.LENGTH_LONG).show()
-        val partida = Gson().fromJson(bluetoothMensaje.mensaje, Partida::class.java)
-        binding.rvListaJugadores.adapter = JugadoresAdapter(partida!!.jugadores)
+    fun onEventPartida(partida: Partida) {
+        this.partida = partida
+        ajustarVistasAPartida(partida)
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventIniciarPartida(evento: MiBluetooth.Evento) {
+        if (evento == MiBluetooth.Evento.INICIAR_PARTIDA){
+            iniciarPartida()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        if (partida == null) {
+            MiBluetooth.enviarDatos(Jugador("El pepe", 0, 0, "el cañon").toJson(), MiBluetooth.TipoDatoTransmitido.JUGADOR)
+        }
+
+
     }
 
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
     }
+
 }

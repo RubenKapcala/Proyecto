@@ -2,15 +2,14 @@ package com.juego.proyecto_1s2122.vistas
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.juego.proyecto_1s2122.databinding.ActivityJuegoBinding
+import com.juego.proyecto_1s2122.databinding.ActivityJuegoFrotarBinding
 
-class JuegoActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityJuegoBinding
+class JuegoFrotarActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityJuegoFrotarBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityJuegoBinding.inflate(layoutInflater)
+        binding = ActivityJuegoFrotarBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
-
 }

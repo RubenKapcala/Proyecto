@@ -9,6 +9,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.google.gson.Gson
+import com.juego.proyecto_1s2122.modelo.Jugador
+import com.juego.proyecto_1s2122.modelo.Partida
+import com.juego.proyecto_1s2122.modelo.Transformable
 import org.greenrobot.eventbus.EventBus
 import java.io.IOException
 import java.io.InputStream
@@ -20,17 +24,18 @@ object MiBluetooth {
     var REQUEST_ENABLE_BLUETOOTH = 1
 
     enum class Estado{STATE_LISTENING, STATE_CONNECTING, STATE_CONNECTED, STATE_CONNECTION_FAILED}
-    enum class Evento{INICIAR_PARTIDA}
-    enum class TipoDatoTransmitido{PARTIDA, EVENTO, TEXTO}
-    class MensajeBluetooth(val mensaje: String)
-    class NuevoDispositivoVinculado(val dispositivo: BluetoothDevice)
+    enum class Evento: Transformable{INICIAR_PARTIDA, PAUSAR_PARTIDA, FINALIZAR_PARTIDA}
+    enum class TipoDatoTransmitido{PARTIDA, JUGADOR, ACCION, EVENTO, TEXTO}
+    class Accion(val nombre: String, val alias: String, val puntos: Int): Transformable
+    class MensajeBluetooth(val mensaje: String): Transformable
+    class NuevoDispositivoVinculado(val dispositivo: BluetoothDevice): Transformable
 
     var conexionServidor: SendReceive? = null
     var conexionesCliente: MutableList<SendReceive?> = mutableListOf()
     var bluetoothAdapter: BluetoothAdapter? = null
-    private var eresServidor = false
+    var eresServidor = false
 
-    private const val APP_NAME = "BTChat"
+    private const val APP_NAME = "BTGame"
     private val MY_UUID = UUID.fromString("bf34a98b-1971-4d0d-a010-592c9c009860")
 
 
@@ -77,7 +82,6 @@ object MiBluetooth {
                     val sendService = SendReceive(socket)
                     conexionesCliente.add(sendService)
                     sendService.start()
-                    EventBus.getDefault().post(NuevoDispositivoVinculado(socket.remoteDevice))
                     serverSocket?.close()
                     break
                 }
@@ -103,7 +107,6 @@ object MiBluetooth {
             try {
                 socket!!.connect()
                 EventBus.getDefault().post(Estado.STATE_CONNECTED)
-
                 conexionServidor = SendReceive(socket)
                 conexionServidor!!.start()
             } catch (e: IOException) {
@@ -136,8 +139,33 @@ object MiBluetooth {
             while (true) {
                 try {
                     bytes = inputStream!!.read(buffer)
-                    val tempMsg = String(buffer, 0, bytes)
-                    EventBus.getDefault().post(MensajeBluetooth(tempMsg))
+                    var tempMsg = String(buffer, 0, bytes)
+
+                    val tipo = TipoDatoTransmitido.values()[tempMsg.subSequence(0, 1).toString().toInt()]
+                    tempMsg = tempMsg.drop(1)
+                    when(tipo){
+                        TipoDatoTransmitido.PARTIDA ->{
+                            val partida = Gson().fromJson(tempMsg, Partida::class.java)
+                            EventBus.getDefault().post(partida)
+                        }
+                        TipoDatoTransmitido.JUGADOR ->{
+                            val jugador = Gson().fromJson(tempMsg, Jugador::class.java)
+                            EventBus.getDefault().post(jugador)
+                        }
+                        TipoDatoTransmitido.ACCION ->{
+                            val accion = Gson().fromJson(tempMsg, Accion::class.java)
+                            EventBus.getDefault().post(accion)
+                        }
+                        TipoDatoTransmitido.EVENTO ->{
+                            val evento = Gson().fromJson(tempMsg, Evento::class.java)
+                            EventBus.getDefault().post(evento)
+                        }
+                        TipoDatoTransmitido.TEXTO ->{
+                            EventBus.getDefault().post(MensajeBluetooth(tempMsg))
+                        }
+                    }
+
+
 
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -154,18 +182,17 @@ object MiBluetooth {
         }
     }
 
-    fun enviarDatos(mensaje: String){
+    fun enviarDatos(mensaje: String, tipo: TipoDatoTransmitido){
+        var mensajeCompleto = tipo.ordinal.toString()
+        mensajeCompleto += mensaje
+
         if (eresServidor){
             for (i in conexionesCliente){
-                i!!.write(mensaje.toByteArray())
+                i!!.write(mensajeCompleto.toByteArray())
             }
         }else{
-            conexionServidor!!.write(mensaje.toByteArray())
+            conexionServidor!!.write(mensajeCompleto.toByteArray())
         }
-    }
-
-    fun obtenerEnlazados(): Set<BluetoothDevice>?{
-        return bluetoothAdapter!!.bondedDevices
     }
 
     interface BuscarDispositivosInterface{
@@ -210,30 +237,7 @@ object MiBluetooth {
 
     }
 
-    interface VisibilizarDispositivoInterface{
-        fun alEmpezar()
-        fun alTerminar()
-    }
-
-    fun visibilizar(activity: Activity, funcion: VisibilizarDispositivoInterface) {
-        val intentFilter = IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED)
-        val broadcastVisibilidad = object: BroadcastReceiver() {
-
-            override fun onReceive(context: Context, intent: Intent) {
-
-                when (intent.action) {
-                    BluetoothAdapter.ACTION_SCAN_MODE_CHANGED -> {
-                        if (intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, BluetoothAdapter.ERROR) == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-                            funcion.alEmpezar()
-                        } else {
-                            funcion.alTerminar()
-                        }
-                    }
-                }
-            }
-        }
-        activity.registerReceiver(broadcastVisibilidad, intentFilter)
-
+    fun visibilizar(activity: Activity) {
         val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         activity.startActivity(discoverableIntent)
 

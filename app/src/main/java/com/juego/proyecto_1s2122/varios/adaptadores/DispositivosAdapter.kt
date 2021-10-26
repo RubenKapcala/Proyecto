@@ -1,13 +1,10 @@
 package com.juego.proyecto_1s2122.varios.adaptadores
 
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.varios.MiBluetooth
@@ -16,8 +13,8 @@ class DispositivosAdapter (private val dataSet: List<BluetoothDevice>,
 ) : RecyclerView.Adapter<DispositivosAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nombre: TextView = view.findViewById(R.id.tv_nombreDispositivo)
-        val adress: TextView = view.findViewById(R.id.tv_direccionDispositivo)
+        val nombre: TextView = view.findViewById(R.id.tv_nombre)
+        val adress: TextView = view.findViewById(R.id.tv_alias)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DispositivosAdapter.ViewHolder {
