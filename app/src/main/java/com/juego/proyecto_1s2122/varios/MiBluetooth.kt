@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
 import com.google.gson.Gson
 import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
@@ -25,10 +26,9 @@ object MiBluetooth {
 
     enum class Estado{STATE_LISTENING, STATE_CONNECTING, STATE_CONNECTED, STATE_CONNECTION_FAILED}
     enum class Evento: Transformable{INICIAR_PARTIDA, PAUSAR_PARTIDA, FINALIZAR_PARTIDA}
-    enum class TipoDatoTransmitido{PARTIDA, JUGADOR, ACCION, EVENTO, TEXTO}
+    enum class TipoDatoTransmitido{PARTIDA, LISTA_JUGADORES, JUGADOR, ACCION, EVENTO, TEXTO}
     class Accion(val nombre: String, val alias: String, val puntos: Int): Transformable
-    class MensajeBluetooth(val mensaje: String): Transformable
-    class NuevoDispositivoVinculado(val dispositivo: BluetoothDevice): Transformable
+    class ListaJugadores(val jugadores: MutableList<Jugador>): Transformable
 
     var conexionServidor: SendReceive? = null
     var conexionesCliente: MutableList<SendReceive?> = mutableListOf()
@@ -37,7 +37,7 @@ object MiBluetooth {
 
     private const val APP_NAME = "BTGame"
     private val MY_UUID = UUID.fromString("bf34a98b-1971-4d0d-a010-592c9c009860")
-
+    private const val separador = "€¬"
 
 
     init {
@@ -141,12 +141,20 @@ object MiBluetooth {
                     bytes = inputStream!!.read(buffer)
                     var tempMsg = String(buffer, 0, bytes)
 
-                    val tipo = TipoDatoTransmitido.values()[tempMsg.subSequence(0, 1).toString().toInt()]
-                    tempMsg = tempMsg.drop(1)
+                    val datosMensaje = tempMsg.split(separador)
+                    val tipo = TipoDatoTransmitido.values()[datosMensaje[0].toInt()]
+                    tempMsg = datosMensaje[1]
+                    //val tipo = TipoDatoTransmitido.values()[tempMsg.subSequence(0, 1).toString().toInt()]
+                    //tempMsg = tempMsg.drop(1)
+                    Log.i("enviado------->", tempMsg)
                     when(tipo){
                         TipoDatoTransmitido.PARTIDA ->{
                             val partida = Gson().fromJson(tempMsg, Partida::class.java)
                             EventBus.getDefault().post(partida)
+                        }
+                        TipoDatoTransmitido.LISTA_JUGADORES ->{
+                            val lista = Gson().fromJson(tempMsg, ListaJugadores::class.java)
+                            EventBus.getDefault().post(lista)
                         }
                         TipoDatoTransmitido.JUGADOR ->{
                             val jugador = Gson().fromJson(tempMsg, Jugador::class.java)
@@ -160,9 +168,7 @@ object MiBluetooth {
                             val evento = Gson().fromJson(tempMsg, Evento::class.java)
                             EventBus.getDefault().post(evento)
                         }
-                        TipoDatoTransmitido.TEXTO ->{
-                            EventBus.getDefault().post(MensajeBluetooth(tempMsg))
-                        }
+                        else -> {}
                     }
 
 
@@ -183,15 +189,17 @@ object MiBluetooth {
     }
 
     fun enviarDatos(mensaje: String, tipo: TipoDatoTransmitido){
-        var mensajeCompleto = tipo.ordinal.toString()
-        mensajeCompleto += mensaje
-
+        val stringBuffer = StringBuffer()
+        stringBuffer.append(tipo.ordinal.toString())
+        stringBuffer.append(separador)
+        stringBuffer.append(mensaje)
+        stringBuffer.append(separador)
         if (eresServidor){
             for (i in conexionesCliente){
-                i!!.write(mensajeCompleto.toByteArray())
+                i!!.write(stringBuffer.toString().toByteArray())
             }
         }else{
-            conexionServidor!!.write(mensajeCompleto.toByteArray())
+            conexionServidor!!.write(stringBuffer.toString().toByteArray())
         }
     }
 

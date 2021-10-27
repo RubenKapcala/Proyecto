@@ -14,11 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/miEstilo">
         <activity
+            android:name=".vistas.CrearUsuarioActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".vistas.JuegoExplotarActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".vistas.JuegoFrotarActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".vistas.JuegoPulsarActivity"
             android:screenOrientation="landscape" />

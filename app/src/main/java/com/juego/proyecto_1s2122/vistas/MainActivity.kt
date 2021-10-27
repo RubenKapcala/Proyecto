@@ -9,7 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
 import com.juego.proyecto_1s2122.databinding.ActivityMainBinding
-import com.juego.proyecto_1s2122.varios.MiBluetooth
+import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
 
 
 class MainActivity : AppCompatActivity() {
@@ -66,9 +66,13 @@ class MainActivity : AppCompatActivity() {
                 aniAlfa.start()
 
                 aniAlfa.addListener(onEnd = {
-                    startActivity(Intent(this, MenuActivity::class.java))
-                    finish()
-
+                    if (DbHelper(this).obtenerUsuario() != null){
+                        startActivity(Intent(this, MenuActivity::class.java))
+                        finish()
+                    }else{
+                        startActivity(Intent(this, CrearUsuarioActivity::class.java))
+                        finish()
+                    }
                 })
             })
         })

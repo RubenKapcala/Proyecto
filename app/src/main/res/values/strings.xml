@@ -5,6 +5,11 @@
     <string name="aceptar">Aceptar</string>
     <string name="activar">Activar</string>
 
+    <string name="introduce_nombre">Introduce tu nombre</string>
+    <string name="nombre">nombre</string>
+    <string name="introduce_alias">Introduce el alias más chulo que se te ocurra</string>
+    <string name="alias">Alias</string>
+
     <string name="crear_partida">Crear partida</string>
     <string name="unirse_a_partida">Unirse a partida</string>
     <string name="estadisticas">Estadísticas</string>

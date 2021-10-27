@@ -10,6 +10,7 @@ import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivitySalaEsperaBinding
 import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
+import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
 import com.juego.proyecto_1s2122.varios.MiBluetooth
 import com.juego.proyecto_1s2122.varios.adaptadores.JugadoresAdapter
 import org.greenrobot.eventbus.EventBus
@@ -113,7 +114,7 @@ class SalaEsperaActivity : AppCompatActivity() {
         super.onResume()
         EventBus.getDefault().register(this)
         if (partida == null) {
-            MiBluetooth.enviarDatos(Jugador("El pepe", 0, 0, "el cañon").toJson(), MiBluetooth.TipoDatoTransmitido.JUGADOR)
+            MiBluetooth.enviarDatos(DbHelper(this).obtenerUsuario()!!.toJson(), MiBluetooth.TipoDatoTransmitido.JUGADOR)
         }
 
 

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityJuegoPulsarBinding
 import com.juego.proyecto_1s2122.modelo.Partida
+import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
 import com.juego.proyecto_1s2122.varios.MiBluetooth
 import com.juego.proyecto_1s2122.varios.adaptadores.JugadoresAdapter
 import com.juego.proyecto_1s2122.varios.adaptadores.JugadoresJuegoAdapter
@@ -31,14 +32,17 @@ class JuegoPulsarActivity : AppCompatActivity() {
         if (MiBluetooth.eresServidor){
             binding.btnRojo.setOnClickListener{
                 partida.jugadores[0].puntos ++
-                MiBluetooth.enviarDatos(partida.toJson(), MiBluetooth.TipoDatoTransmitido.PARTIDA)
+                MiBluetooth.enviarDatos(MiBluetooth.ListaJugadores(partida.jugadores).toJson(), MiBluetooth.TipoDatoTransmitido.LISTA_JUGADORES)
                 binding.rvPuntuacion.adapter = JugadoresJuegoAdapter(partida.jugadores)
             }
         }else{
             binding.btnRojo.setOnClickListener{
-                MiBluetooth.enviarDatos(MiBluetooth.Accion("El pepe", "el cañon", 1).toJson(), MiBluetooth.TipoDatoTransmitido.ACCION)
+                val jugador = DbHelper(this).obtenerUsuario()!!
+                MiBluetooth.enviarDatos(MiBluetooth.Accion(jugador.nombre, jugador.alias, 1).toJson(), MiBluetooth.TipoDatoTransmitido.ACCION)
             }
         }
+
+        binding.btnRojo.isClickable = false
 
         val tiempoInicio = object : CountDownTimer(6000, 1000){
             override fun onTick(millisUntilFinished: Long) {
@@ -74,9 +78,8 @@ class JuegoPulsarActivity : AppCompatActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventPartida(partida: Partida) {
-        binding.rvPuntuacion.adapter = JugadoresJuegoAdapter(partida.jugadores)
-
+    fun onEventListaJugadores(listaJugadores: MiBluetooth.ListaJugadores) {
+        binding.rvPuntuacion.adapter = JugadoresJuegoAdapter(listaJugadores.jugadores)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -87,8 +90,9 @@ class JuegoPulsarActivity : AppCompatActivity() {
                 break
             }
         }
+
         binding.rvPuntuacion.adapter = JugadoresJuegoAdapter(partida.jugadores)
-        MiBluetooth.enviarDatos(partida.toJson(), MiBluetooth.TipoDatoTransmitido.PARTIDA)
+        MiBluetooth.enviarDatos(MiBluetooth.ListaJugadores(partida.jugadores).toJson(), MiBluetooth.TipoDatoTransmitido.LISTA_JUGADORES)
     }
 
     override fun onResume() {

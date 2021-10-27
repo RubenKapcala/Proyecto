@@ -6,8 +6,7 @@ import java.io.Serializable
 
 data class Jugador(
         val nombre: String,
-        var puntos: Int,
-        var posicion: Int,
-        val alias: String
+        val alias: String,
+        var puntos: Int
 ): Serializable, Transformable
 

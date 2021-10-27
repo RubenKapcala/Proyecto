@@ -7,6 +7,7 @@ import com.juego.proyecto_1s2122.databinding.ActivityCrearPartidaBinding
 import com.juego.proyecto_1s2122.modelo.Juego
 import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
+import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
 import com.juego.proyecto_1s2122.varios.MiBluetooth
 import java.net.NetworkInterface
 import java.text.SimpleDateFormat
@@ -84,7 +85,7 @@ class CrearPartidaActivity : AppCompatActivity() {
     private fun crearPartida(juegoElegido: Int, jugadores: Int): Partida {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("ES"))
         val currentDate = sdf.format(Date())
-        return Partida(mutableListOf(Jugador("la polla", 0, 0, "el que te foca")), listaJuegos[juegoElegido], jugadores, currentDate)
+        return Partida(mutableListOf(DbHelper(this).obtenerUsuario()!!), listaJuegos[juegoElegido], jugadores, currentDate)
     }
 
     //esto ya lo ire haciendo
