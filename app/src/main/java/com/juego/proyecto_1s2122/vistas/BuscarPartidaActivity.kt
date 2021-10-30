@@ -2,11 +2,13 @@ package com.juego.proyecto_1s2122.vistas
 
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityBuacarPartidaBinding
@@ -24,6 +26,7 @@ class BuscarPartidaActivity : AppCompatActivity() {
         binding = ActivityBuacarPartidaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         binding.rvPartidas.setHasFixedSize(true)
         binding.rvPartidas.layoutManager = LinearLayoutManager(this)
 
@@ -35,9 +38,11 @@ class BuscarPartidaActivity : AppCompatActivity() {
         }
     }
 
+
     private fun buscarDispositivos(){
 
         val dispositivosEncontrados = ArrayList<BluetoothDevice>()
+
 
         MiBluetooth.buscarDispisitivos(this, object: MiBluetooth.BuscarDispositivosInterface{
 
@@ -47,9 +52,9 @@ class BuscarPartidaActivity : AppCompatActivity() {
                 binding.pbBuscarDispositivos.visibility = View.VISIBLE
             }
 
-            override fun alEncontrar(dispositivo: BluetoothDevice) {
-                if (!dispositivosEncontrados.contains(dispositivo)){
-                    dispositivosEncontrados.add(dispositivo)
+            override fun alEncontrar(device: BluetoothDevice) {
+                if (!dispositivosEncontrados.contains(device)){
+                    dispositivosEncontrados.add(device)
                     binding.rvPartidas.adapter = DispositivosAdapter(dispositivosEncontrados)
                 }
             }
@@ -63,21 +68,55 @@ class BuscarPartidaActivity : AppCompatActivity() {
             }
 
         })
-    }
 
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventEstado(estado: MiBluetooth.Estado) {
 
         when(estado){
-            MiBluetooth.Estado.STATE_CONNECTING -> Toast.makeText(this, "Connecting", Toast.LENGTH_LONG).show()
-            MiBluetooth.Estado.STATE_CONNECTION_FAILED -> Toast.makeText(this, "Connection Failed", Toast.LENGTH_LONG).show()
-            MiBluetooth.Estado.STATE_CONNECTED ->{
+            MiBluetooth.Estado.STATE_CONNECTING -> Toast.makeText(
+                this,
+                "Connecting",
+                Toast.LENGTH_LONG
+            ).show()
+            MiBluetooth.Estado.STATE_CONNECTION_FAILED -> Toast.makeText(
+                this,
+                "Connection Failed",
+                Toast.LENGTH_LONG
+            ).show()
+            MiBluetooth.Estado.STATE_CONNECTED -> {
                 Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, SalaEsperaActivity::class.java)
                 startActivity(intent)
             }
             else -> {}
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            MiBluetooth.REQUEST_BLUETOOTH_SCAN_23 -> {
+                if (grantResults.isNotEmpty()
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, getText(R.string.permiso_aceptado), Toast.LENGTH_SHORT).show()
+                    buscarDispositivos()
+                } else {
+                    Toast.makeText(this, getText(R.string.permiso_denegado), Toast.LENGTH_SHORT).show()
+                }
+            }
+            MiBluetooth.REQUEST_BLUETOOTH_SCAN_31 -> {
+                if (grantResults.isNotEmpty()
+                        && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, getText(R.string.permiso_aceptado), Toast.LENGTH_SHORT).show()
+                    buscarDispositivos()
+                } else {
+                    Toast.makeText(this, getText(R.string.permiso_denegado), Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
     }
 

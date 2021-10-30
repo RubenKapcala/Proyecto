@@ -91,7 +91,7 @@ class SalaEsperaActivity : AppCompatActivity() {
         ajustarVistasAPartida(partida!!)
         MiBluetooth.enviarDatos(partida!!.toJson(), MiBluetooth.TipoDatoTransmitido.PARTIDA)
         visibilizarDispositivo()
-        if (partida!!.jugadores.size >= partida!!.nJugadores -1){
+        if (partida!!.jugadores.size >= partida!!.nJugadores){
             MiBluetooth.enviarDatos(MiBluetooth.Evento.INICIAR_PARTIDA.toJson(), MiBluetooth.TipoDatoTransmitido.EVENTO)
             iniciarPartida()
         }
@@ -116,8 +116,6 @@ class SalaEsperaActivity : AppCompatActivity() {
         if (partida == null) {
             MiBluetooth.enviarDatos(DbHelper(this).obtenerUsuario()!!.toJson(), MiBluetooth.TipoDatoTransmitido.JUGADOR)
         }
-
-
     }
 
     override fun onPause() {

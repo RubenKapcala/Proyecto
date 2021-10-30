@@ -1,16 +1,21 @@
 package com.juego.proyecto_1s2122.varios
 
+import android.Manifest
 import android.app.Activity
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothServerSocket
-import android.bluetooth.BluetoothSocket
+import android.bluetooth.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.gson.Gson
+import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
 import com.juego.proyecto_1s2122.modelo.Transformable
@@ -20,9 +25,12 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 
+
 object MiBluetooth {
-    
+
     var REQUEST_ENABLE_BLUETOOTH = 1
+    var REQUEST_BLUETOOTH_SCAN_31 = 2
+    var REQUEST_BLUETOOTH_SCAN_23 = 3
 
     enum class Estado{STATE_LISTENING, STATE_CONNECTING, STATE_CONNECTED, STATE_CONNECTION_FAILED}
     enum class Evento: Transformable{INICIAR_PARTIDA, PAUSAR_PARTIDA, FINALIZAR_PARTIDA}
@@ -60,7 +68,10 @@ object MiBluetooth {
 
         init {
             try {
-                serverSocket = bluetoothAdapter?.listenUsingRfcommWithServiceRecord(APP_NAME, MY_UUID)
+                serverSocket = bluetoothAdapter?.listenUsingRfcommWithServiceRecord(
+                        APP_NAME,
+                        MY_UUID
+                )
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -148,23 +159,23 @@ object MiBluetooth {
                     //tempMsg = tempMsg.drop(1)
                     Log.i("enviado------->", tempMsg)
                     when(tipo){
-                        TipoDatoTransmitido.PARTIDA ->{
+                        TipoDatoTransmitido.PARTIDA -> {
                             val partida = Gson().fromJson(tempMsg, Partida::class.java)
                             EventBus.getDefault().post(partida)
                         }
-                        TipoDatoTransmitido.LISTA_JUGADORES ->{
+                        TipoDatoTransmitido.LISTA_JUGADORES -> {
                             val lista = Gson().fromJson(tempMsg, ListaJugadores::class.java)
                             EventBus.getDefault().post(lista)
                         }
-                        TipoDatoTransmitido.JUGADOR ->{
+                        TipoDatoTransmitido.JUGADOR -> {
                             val jugador = Gson().fromJson(tempMsg, Jugador::class.java)
                             EventBus.getDefault().post(jugador)
                         }
-                        TipoDatoTransmitido.ACCION ->{
+                        TipoDatoTransmitido.ACCION -> {
                             val accion = Gson().fromJson(tempMsg, Accion::class.java)
                             EventBus.getDefault().post(accion)
                         }
-                        TipoDatoTransmitido.EVENTO ->{
+                        TipoDatoTransmitido.EVENTO -> {
                             val evento = Gson().fromJson(tempMsg, Evento::class.java)
                             EventBus.getDefault().post(evento)
                         }
@@ -210,9 +221,13 @@ object MiBluetooth {
         fun siYaEstaBuscando()
     }
 
+
     fun buscarDispisitivos(activity: Activity, funciones: BuscarDispositivosInterface) {
 
         if (!bluetoothAdapter?.isDiscovering!!){
+
+            comprobarPermisos(activity)
+
             val intentFilter = IntentFilter()
             intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
             intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
@@ -223,13 +238,17 @@ object MiBluetooth {
                 override fun onReceive(context: Context, intent: Intent) {
                     when (intent.action) {
                         BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
-                           funciones.alEmpezar()
+                            funciones.alEmpezar()
                         }
                         BluetoothDevice.ACTION_FOUND -> {
                             //Extraemos el dispositivo del intent
                             val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
-                            funciones.alEncontrar(device)
-
+                            val bluetoothClass: BluetoothClass = device.bluetoothClass
+                            when (bluetoothClass.majorDeviceClass) {
+                                BluetoothClass.Device.Major.PHONE -> {
+                                    funciones.alEncontrar(device)
+                                }
+                            }
                         }
                         BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                             funciones.alTerminar()
@@ -238,11 +257,46 @@ object MiBluetooth {
                 }
             }
             activity.registerReceiver(broadcastReceiverBusqueda, intentFilter)
-            bluetoothAdapter!!.startDiscovery()
+
         }else{
             funciones.siYaEstaBuscando()
         }
 
+    }
+
+    private fun comprobarPermisos(activity: Activity){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            @RequiresApi(31)
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(
+                        activity, arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                        Manifest.permission.BLUETOOTH_SCAN
+                ), REQUEST_BLUETOOTH_SCAN_31)
+            }
+
+            if (bluetoothAdapter!!.startDiscovery()){
+            }else{
+                Toast.makeText(activity, activity.getText(R.string.permisos_necesasios), Toast.LENGTH_LONG).show()
+            }
+
+        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(
+                        activity, arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ), REQUEST_BLUETOOTH_SCAN_23)
+            }
+
+            if (bluetoothAdapter!!.startDiscovery()){
+            }else{
+                Toast.makeText(activity, activity.getText(R.string.permisos_necesasios), Toast.LENGTH_LONG).show()
+            }
+        }else{
+            bluetoothAdapter!!.startDiscovery()
+        }
     }
 
     fun visibilizar(activity: Activity) {
