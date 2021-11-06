@@ -4,8 +4,7 @@
     <string name="atras">atrás</string>
     <string name="aceptar">Aceptar</string>
     <string name="activar">Activar</string>
-    <string name="permiso_aceptado">Permiso aceptado</string>
-    <string name="permiso_denegado">Permiso denegado</string>
+    <string name="continuar">Continuar</string>
 
     <string name="introduce_nombre">Introduce tu nombre</string>
     <string name="nombre">nombre</string>
@@ -28,6 +27,9 @@
     <string name="ya_buscando">Ya se esta realizando la búsqueda</string>
     <string name="partidas_encontradas">PARTIDAS ENCONTRADAS</string>
     <string name="permisos_necesasios">Necesitas aceptar los permisos para poder usar la aplicación</string>
+    <string name="permiso_aceptado">Permiso aceptado</string>
+    <string name="activar_gps">Búsqueda fallida, compruebe que tiene activada la ubicación gps.</string>
+
 
 
     <string name="go">GO</string>

@@ -89,10 +89,13 @@ class BuscarPartidaActivity : AppCompatActivity() {
                 Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, SalaEsperaActivity::class.java)
                 startActivity(intent)
+                finish()
             }
             else -> {}
         }
     }
+
+
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -104,19 +107,9 @@ class BuscarPartidaActivity : AppCompatActivity() {
                     Toast.makeText(this, getText(R.string.permiso_aceptado), Toast.LENGTH_SHORT).show()
                     buscarDispositivos()
                 } else {
-                    Toast.makeText(this, getText(R.string.permiso_denegado), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getText(R.string.permisos_necesasios), Toast.LENGTH_SHORT).show()
                 }
             }
-            MiBluetooth.REQUEST_BLUETOOTH_SCAN_31 -> {
-                if (grantResults.isNotEmpty()
-                        && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, getText(R.string.permiso_aceptado), Toast.LENGTH_SHORT).show()
-                    buscarDispositivos()
-                } else {
-                    Toast.makeText(this, getText(R.string.permiso_denegado), Toast.LENGTH_SHORT).show()
-                }
-            }
-
         }
     }
 

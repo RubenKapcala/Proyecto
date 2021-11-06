@@ -72,6 +72,7 @@ class CrearPartidaActivity : AppCompatActivity() {
             val intent = Intent(this, SalaEsperaActivity::class.java)
             intent.putExtra("partida", partida)
             startActivity(intent)
+            finish()
         }
     }
 

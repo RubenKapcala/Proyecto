@@ -71,6 +71,7 @@ class SalaEsperaActivity : AppCompatActivity() {
         }
         intent.putExtra("partida", partida)
         startActivity(intent)
+        finish()
 
     }
 
@@ -90,10 +91,11 @@ class SalaEsperaActivity : AppCompatActivity() {
         partida?.jugadores?.add(jugador)
         ajustarVistasAPartida(partida!!)
         MiBluetooth.enviarDatos(partida!!.toJson(), MiBluetooth.TipoDatoTransmitido.PARTIDA)
-        visibilizarDispositivo()
         if (partida!!.jugadores.size >= partida!!.nJugadores){
             MiBluetooth.enviarDatos(MiBluetooth.Evento.INICIAR_PARTIDA.toJson(), MiBluetooth.TipoDatoTransmitido.EVENTO)
             iniciarPartida()
+        }else{
+            visibilizarDispositivo()
         }
     }
 

@@ -39,9 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:ems="10"
-        android:maxLength="15"
+        android:hint="@string/nombre"
         android:inputType="textPersonName"
-        android:text="@string/nombre"
+        android:maxLength="15"
         app:layout_constraintStart_toStartOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -51,9 +51,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:ems="10"
-        android:maxLength="15"
+        android:hint="@string/alias"
         android:inputType="textPersonName"
-        android:text="@string/alias"
+        android:maxLength="15"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
