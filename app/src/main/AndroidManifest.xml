@@ -31,13 +31,7 @@
             android:name=".vistas.CrearUsuarioActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".vistas.JuegoExplotarActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".vistas.JuegoFrotarActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".vistas.JuegoPulsarActivity"
+            android:name=".vistas.JuegoActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".vistas.SalaEsperaActivity"

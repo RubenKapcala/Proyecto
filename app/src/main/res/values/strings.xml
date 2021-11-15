@@ -30,6 +30,16 @@
     <string name="permiso_aceptado">Permiso aceptado</string>
     <string name="activar_gps">Búsqueda fallida, compruebe que tiene activada la ubicación gps.</string>
 
+    <string name="pulsar">Pulsar</string>
+    <string name="descripcion_pulsar">El que pulse más rápido durante un minuto gana</string>
+    <string name="frotar">Frotar</string>
+    <string name="descripcion_frotar">Pasa de la parte roja a la verde tantas veces como puedas en un minuto. Ganará el más rápido.</string>
+    <string name="globos">Globos</string>
+    <string name="descripcion_globos">El que explote mas globos en un minuto gana. Los globos rojos te harán perder puntos. Toca fuera del globo para pasar al siguiente.</string>
+
+    Juego(1, "perseguir", 0, "mata al resto"),
+    Juego(2, "frotar", 0, "el dedo mas rápido"),
+
 
 
     <string name="go">GO</string>

@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.juego.proyecto_1s2122.R
-import com.juego.proyecto_1s2122.databinding.ActivityJuegoPulsarBinding
+import com.juego.proyecto_1s2122.databinding.ActivityJuegoBinding
 import com.juego.proyecto_1s2122.modelo.Partida
 import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
 import com.juego.proyecto_1s2122.varios.MiBluetooth
@@ -16,13 +16,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-class JuegoPulsarActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityJuegoPulsarBinding
+class JuegoActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityJuegoBinding
     private lateinit var partida: Partida
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityJuegoPulsarBinding.inflate(layoutInflater)
+        binding = ActivityJuegoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         partida = (intent.getSerializableExtra("partida") as Partida?)!!
@@ -31,6 +31,9 @@ class JuegoPulsarActivity : AppCompatActivity() {
         binding.rvPuntuacion.layoutManager = LinearLayoutManager(this)
         adaptarPuntuacion()
 
+        when(partida.juego){
+
+        }
         if (MiBluetooth.eresServidor){
             binding.btnRojo.setOnClickListener{
                 partida.jugadores[0].puntos ++

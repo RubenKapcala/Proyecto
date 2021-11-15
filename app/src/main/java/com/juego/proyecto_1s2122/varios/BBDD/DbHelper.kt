@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.modelo.Jugador
 
 class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -26,7 +27,23 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
         val nombre: String?
         val alias: String?
         val cursor = db.query(Tablas.Jugadores.TABLE_NAME, arrayOf(Tablas.Jugadores.COLUMN_nombre, Tablas.Jugadores.COLUMN_alias),
-            "id = 1", null, null, null, null)
+                "id = 1", null, null, null, null)
+        if (cursor.moveToFirst()){
+            nombre = cursor.getString(0)
+            alias = cursor.getString(1)
+            cursor.close()
+            return Jugador(nombre, alias, 0)
+        }
+        cursor.close()
+        return null
+    }
+
+    fun obtenerJuegos(): List<Tablas.Juegos>{
+        val rs: ResultSet = db.getResultSet("SELECT COUNT(*) FROM USERS;")
+        val nombre: String?
+        val alias: String?
+        val cursor = db.query(Tablas.Juegos.TABLE_NAME, arrayOf(Tablas.Jugadores.COLUMN_nombre, Tablas.Jugadores.COLUMN_alias),
+                null, null, null, null, null)
         if (cursor.moveToFirst()){
             nombre = cursor.getString(0)
             alias = cursor.getString(1)
@@ -60,6 +77,21 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
                 "${Tablas.Partidas_jugadores.COLUMN_puntos} INTEGER NOT NULL, " +
                 "FOREIGN KEY(${Tablas.Partidas_jugadores.COLUMN_id_partida}) REFERENCES ${Tablas.Partidas.TABLE_NAME}(${Tablas.Partidas.COLUMN_id}), " +
                 "FOREIGN KEY(${Tablas.Partidas_jugadores.COLUMN_id_jugador}) REFERENCES ${Tablas.Jugadores.TABLE_NAME}(${Tablas.Jugadores.COLUMN_id}))")
+
+        var values = ContentValues()
+        values.put(Tablas.Juegos.COLUMN_nombre, R.string.pulsar)
+        values.put(Tablas.Juegos.COLUMN_descripcion, R.string.descripcion_pulsar)
+        db.insert(Tablas.Juegos.TABLE_NAME, null, values)
+
+        values = ContentValues()
+        values.put(Tablas.Juegos.COLUMN_nombre, R.string.frotar)
+        values.put(Tablas.Juegos.COLUMN_descripcion, R.string.descripcion_frotar)
+        db.insert(Tablas.Juegos.TABLE_NAME, null, values)
+
+        values = ContentValues()
+        values.put(Tablas.Juegos.COLUMN_nombre, R.string.globos)
+        values.put(Tablas.Juegos.COLUMN_descripcion, R.string.descripcion_globos)
+        db.insert(Tablas.Juegos.TABLE_NAME, null, values)
 
     }
 

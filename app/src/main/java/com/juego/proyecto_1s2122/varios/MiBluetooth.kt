@@ -41,7 +41,7 @@ object MiBluetooth {
     enum class TipoDatoTransmitido{PARTIDA, LISTA_JUGADORES, JUGADOR, ACCION, EVENTO, TEXTO}
 
     //Clases que pueden ser enviadas en el mensaje
-    enum class Evento: Transformable{INICIAR_PARTIDA, PAUSAR_PARTIDA, FINALIZAR_PARTIDA}
+    enum class Evento: Transformable{INICIAR_PARTIDA, PAUSAR_PARTIDA}
     class Accion(val nombre: String, val alias: String, val puntos: Int): Transformable
     class ListaJugadores(val jugadores: MutableList<Jugador>): Transformable
 
@@ -72,7 +72,131 @@ object MiBluetooth {
     }
 
 
-    //Crea objetos para conectarse como servidor
+    //Pone el dispositivo visible
+    fun visibilizar(activity: Activity) {
+        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        activity.startActivity(discoverableIntent) //Lanza el intent para hacer visible
+
+        val server = ServerClass() //Crea un objeto para gestionar la conexión como servidor
+        server.start() //Se queda a la espera de que se conecten
+    }
+
+
+    //Implementa la funcionalidad de los eventos que ocurren mientras se buscan dispositivos
+    interface BuscarDispositivosInterface{
+        fun alEmpezar()
+        fun alEncontrar(device: BluetoothDevice)
+        fun alTerminar()
+        fun siYaEstaBuscando()
+    }
+
+
+    //Permite buscar dispositivos Bluetooth visibles cercanos
+    fun buscarDispisitivos(activity: Activity, funciones: BuscarDispositivosInterface) {
+        if (!bluetoothAdapter?.isDiscovering!!){ //Comprueba que no este descubriendo
+            comprobarPermisos(activity) //Comprueba que tenga permisos
+            val intentFilter = IntentFilter() //Filtramos el intent
+            intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
+            intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+            intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
+
+            //Gestiona las respuestas que recibimos
+            val broadcastReceiverBusqueda = object: BroadcastReceiver() {
+
+                override fun onReceive(context: Context, intent: Intent) {
+                    when (intent.action) { //Filtra por acción
+                        BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                            funciones.alEmpezar() //Se implementa el crear el objeto
+                        }
+                        BluetoothDevice.ACTION_FOUND -> {
+                            //Extraemos el dispositivo del intent
+                            val device: BluetoothDevice =
+                                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
+
+                            //Extraemos el tipo de dispositivo que es
+                            val bluetoothClass: BluetoothClass = device.bluetoothClass
+
+                            when (bluetoothClass.majorDeviceClass) { //Comprueba si es un móvil
+                                BluetoothClass.Device.Major.PHONE -> {
+                                    funciones.alEncontrar(device) //Se implementa el crear el objeto
+                                }
+                            }
+                        }
+                        BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                            funciones.alTerminar() //Se implementa el crear el objeto
+                        }
+                    }
+                }
+            }
+            //Registra la activity en el broadcastReceiver
+            activity.registerReceiver(broadcastReceiverBusqueda, intentFilter)
+
+        }else{
+            funciones.siYaEstaBuscando() //Se implementa el crear el objeto
+        }
+    }
+
+    //Comprueba que tenga permisos y de no tenerlos los pide
+    private fun comprobarPermisos(activity: Activity){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){ //A partir de la API 23
+
+            //Si no tenemos el permiso de búsqueda
+            if (ContextCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED){
+
+                //Pide el permiso
+                ActivityCompat.requestPermissions(activity,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_BLUETOOTH_SCAN_23
+                )
+            }
+
+            //Inicia la búsqueda y comprueva si es exitosa
+            if (!bluetoothAdapter!!.startDiscovery()){
+                //De no serlo lo informa y sugiere comprobar que esté la ubicación activa
+                Toast.makeText(
+                        activity,
+                        activity.getText(R.string.activar_gps),
+                        Toast.LENGTH_LONG
+                ).show()
+            }
+        }else{ //Si en menor a la API 23
+            bluetoothAdapter!!.startDiscovery() //Inicia la busqueda
+        }
+    }
+
+
+    //Permite enviar un mensaje a los dispositivos conectados
+    fun enviarDatos(mensaje: String, tipo: TipoDatoTransmitido){
+        val stringBuffer = StringBuffer()
+        stringBuffer.append(tipo.ordinal.toString()) //Pasa tipo de dato a Int y después a String
+        stringBuffer.append(separador) //Añade un separador
+        stringBuffer.append(mensaje) //Añade el mensaje
+        stringBuffer.append(separador) //Añade otro separados
+        if (eresServidor){ //Si funciona como servidor se lo envía a cada cliente
+            for (i in conexionesCliente){
+                i!!.write(stringBuffer.toString().toByteArray())
+            }
+        }else{ //Si funciona como cliente se lo envia al servidor
+            conexionServidor!!.write(stringBuffer.toString().toByteArray())
+        }
+    }
+
+
+    //Desconecta de todos los dispositivos
+    fun desconectarDispositivos(){
+        conexionServidor?.cancelarConexion() //Cancela la conexión con el servidor
+
+        for (i in conexionesCliente){ //Cancela las conexiones con cada cliente
+            i?.cancelarConexion()
+        }
+        conexionesCliente.clear() //Vacía la lista de conexiones con clientes
+    }
+
+
+    //Crea un hilo nuevo para conectarse como servidor
     class ServerClass : Thread() {
         private var serverSocket: BluetoothServerSocket? = null
 
@@ -112,7 +236,7 @@ object MiBluetooth {
     }
 
 
-    //Crea objetos para conectarse como cliente
+    //Crea un hilo nuevo para conectarse como cliente
     class ClientClass(device: BluetoothDevice) : Thread() {
         private var socket: BluetoothSocket? = null
 
@@ -172,7 +296,6 @@ object MiBluetooth {
                     if (cerrar){ //Sale del bucle para finalizar el hilo
                         break
                     }
-
                     bytes = inputStream.read(buffer) //Lee el mensaje y devuelve la longitud
                     var tempMsg = String(buffer, 0, bytes) //Lo convierte en String
                     val datosMensaje = tempMsg.split(separador) //Separa el mensaje en partes
@@ -206,9 +329,6 @@ object MiBluetooth {
                         }
                         else -> {}
                     }
-
-
-
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -233,128 +353,5 @@ object MiBluetooth {
                 socket.close() //Cierra el socket
             } catch (e: Exception) { }
         }
-    }
-
-
-    //Permite enviar un mensaje a los dispositivos conectados
-    fun enviarDatos(mensaje: String, tipo: TipoDatoTransmitido){
-        val stringBuffer = StringBuffer()
-        stringBuffer.append(tipo.ordinal.toString()) //Pasa tipo de dato a Int y después a String
-        stringBuffer.append(separador) //Añade un separador
-        stringBuffer.append(mensaje) //Añade el mensaje
-        stringBuffer.append(separador) //Añade otro separados
-        if (eresServidor){ //Si funciona como servidor se lo envía a cada cliente
-            for (i in conexionesCliente){
-                i!!.write(stringBuffer.toString().toByteArray())
-            }
-        }else{ //Si funciona como cliente se lo envia al servidor
-            conexionServidor!!.write(stringBuffer.toString().toByteArray())
-        }
-    }
-
-
-    //Desconecta de todos los dispositivos
-    fun desconectarDispositivos(){
-        conexionServidor?.cancelarConexion() //Cancela la conexión con el servidor
-
-        for (i in conexionesCliente){ //Cancela las conexiones con cada cliente
-            i?.cancelarConexion()
-        }
-        conexionesCliente.clear() //Vacía la lista de conexiones con clientes
-    }
-
-
-    //Implementa la funcionalidad de los eventos que ocurren mientras se buscan dispositivos
-    interface BuscarDispositivosInterface{
-        fun alEmpezar()
-        fun alEncontrar(device: BluetoothDevice)
-        fun alTerminar()
-        fun siYaEstaBuscando()
-    }
-
-
-    //Permite buscar dispositivos Bluetooth visibles cercanos
-    fun buscarDispisitivos(activity: Activity, funciones: BuscarDispositivosInterface) {
-
-        if (!bluetoothAdapter?.isDiscovering!!){ //Comprueba que no este descubriendo
-
-            comprobarPermisos(activity) //Comprueba que tenga permisos
-
-            val intentFilter = IntentFilter() //Filtramos el intent
-            intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
-            intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
-            intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
-
-            //Gestiona las respuestas que recibimos
-            val broadcastReceiverBusqueda = object: BroadcastReceiver() {
-
-                override fun onReceive(context: Context, intent: Intent) {
-                    when (intent.action) { //Filtra por acción
-                        BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
-                            funciones.alEmpezar() //Se implementa el crear el objeto
-                        }
-                        BluetoothDevice.ACTION_FOUND -> {
-                            //Extraemos el dispositivo del intent
-                            val device: BluetoothDevice =
-                                intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
-
-                            //Extraemos el tipo de dispositivo que es
-                            val bluetoothClass: BluetoothClass = device.bluetoothClass
-
-                            when (bluetoothClass.majorDeviceClass) { //Comprueba si es un móvil
-                                BluetoothClass.Device.Major.PHONE -> {
-                                    funciones.alEncontrar(device) //Se implementa el crear el objeto
-                                }
-                            }
-                        }
-                        BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
-                            funciones.alTerminar() //Se implementa el crear el objeto
-                        }
-                    }
-                }
-            }
-            //Registra la activity en el broadcastReceiver
-            activity.registerReceiver(broadcastReceiverBusqueda, intentFilter)
-
-        }else{
-            funciones.siYaEstaBuscando() //Se implementa el crear el objeto
-        }
-
-    }
-
-    //Comprueba que tenga permisos y de no tenerlos los pide
-    private fun comprobarPermisos(activity: Activity){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){ //A partir de la API 23
-
-            //Si no tenemos el permiso de búsqueda
-            if (ContextCompat.checkSelfPermission(
-                    activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED){
-
-                    //Pide el permiso
-                    ActivityCompat.requestPermissions(activity,
-                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                            REQUEST_BLUETOOTH_SCAN_23
-                    )
-            }
-
-            //Inicia la búsqueda y comprueva si es exitosa
-            if (!bluetoothAdapter!!.startDiscovery()){
-                //De no serlo lo informa y sugiere comprobar que esté la ubicación activa
-                Toast.makeText(activity, activity.getText(R.string.activar_gps), Toast.LENGTH_LONG).show()
-            }
-        }else{ //Si en menor a la API 23
-            bluetoothAdapter!!.startDiscovery() //Inicia la busqueda
-        }
-    }
-
-    //Pone el dispositivo visible
-    fun visibilizar(activity: Activity) {
-        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-        activity.startActivity(discoverableIntent) //Lanza el intent para hacer visible
-
-        val server = ServerClass() //Crea un objeto para gestionar la conexión como servidor
-        server.start() //Se queda a la espera de que se conecten
     }
 }

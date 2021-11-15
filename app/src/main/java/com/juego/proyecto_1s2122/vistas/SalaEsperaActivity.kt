@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivitySalaEsperaBinding
 import com.juego.proyecto_1s2122.modelo.Jugador
@@ -32,7 +31,7 @@ class SalaEsperaActivity : AppCompatActivity() {
         binding.rvListaJugadores.layoutManager = LinearLayoutManager(this)
 
         binding.btnAtras.setOnClickListener { finish() }
-        binding.btnConfirmar.setOnClickListener{ startActivity(Intent(this, JuegoPulsarActivity::class.java)) }
+        binding.btnConfirmar.setOnClickListener{ startActivity(Intent(this, JuegoActivity::class.java)) }
 
         partida = intent.getSerializableExtra("partida") as Partida?
 
@@ -60,7 +59,7 @@ class SalaEsperaActivity : AppCompatActivity() {
         var intent = Intent()
         when(partida?.juego?.nombre){
             "pulsar" -> {
-                intent = Intent(this, JuegoPulsarActivity::class.java)
+                intent = Intent(this, JuegoActivity::class.java)
             }
             "frotar" -> {
                 intent = Intent(this, JuegoFrotarActivity::class.java)

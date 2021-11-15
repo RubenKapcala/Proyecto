@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".vistas.JuegoPulsarActivity">
+    tools:context=".vistas.JuegoActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_puntuacion"
@@ -22,21 +22,10 @@
         app:layout_constraintWidth_percent="0.4" />
 
     <ImageView
-        android:id="@+id/btn_pausa"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@+id/rv_puntuacion"
-        app:layout_constraintHeight_percent="0.15"
-        app:layout_constraintStart_toStartOf="@+id/rv_puntuacion"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.1"
-        app:srcCompat="@android:drawable/ic_media_pause" />
-
-    <ImageView
         android:id="@+id/btn_rojo"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.8"
@@ -53,8 +42,8 @@
         android:textSize="56sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/rv_puntuacion"
-        app:layout_constraintEnd_toStartOf="@+id/btn_rojo"
-        app:layout_constraintStart_toEndOf="@+id/btn_pausa"
+        app:layout_constraintEnd_toEndOf="@+id/rv_puntuacion"
+        app:layout_constraintStart_toStartOf="@+id/rv_puntuacion"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -72,5 +61,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9"
         app:layout_constraintWidth_percent="0.25" />
+
+    <ImageView
+        android:id="@+id/pista_frotar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.24"
+        app:layout_constraintStart_toEndOf="@+id/rv_puntuacion"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        app:srcCompat="@drawable/pista_frotar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

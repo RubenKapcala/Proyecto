@@ -92,9 +92,11 @@ class CrearPartidaActivity : AppCompatActivity() {
     //esto ya lo ire haciendo
 
 
-    private fun obtenerListaJuegos(): MutableList<Juego> {
-        return mutableListOf(
-                Juego(0, "pulsar", 0, "El que pulse más rápido gana"),
+    private fun obtenerListaJuegos(): List<Juego> {
+
+        val lista =
+        return listOf(
+                Juego(0, "pulsar", 0, "El que pulse más rápido durante un minuto gana"),
                 Juego(1, "perseguir", 0, "mata al resto"),
                 Juego(2, "frotar", 0, "el dedo mas rápido"),
         )
