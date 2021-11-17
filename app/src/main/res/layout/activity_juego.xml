@@ -63,10 +63,11 @@
         app:layout_constraintWidth_percent="0.25" />
 
     <ImageView
-        android:id="@+id/pista_frotar"
+        android:id="@+id/iv_pistaFrotar"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.24"
@@ -74,5 +75,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.5"
         app:srcCompat="@drawable/pista_frotar" />
+
+    <ImageView
+        android:id="@+id/iv_globos"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/nubes"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.8"
+        app:layout_constraintStart_toEndOf="@+id/rv_puntuacion"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,7 +31,6 @@ class SalaEsperaActivity : AppCompatActivity() {
         binding.rvListaJugadores.layoutManager = LinearLayoutManager(this)
 
         binding.btnAtras.setOnClickListener { finish() }
-        binding.btnConfirmar.setOnClickListener{ startActivity(Intent(this, JuegoActivity::class.java)) }
 
         partida = intent.getSerializableExtra("partida") as Partida?
 
@@ -56,18 +55,7 @@ class SalaEsperaActivity : AppCompatActivity() {
     }
 
     private fun iniciarPartida() {
-        var intent = Intent()
-        when(partida?.juego?.nombre){
-            "pulsar" -> {
-                intent = Intent(this, JuegoActivity::class.java)
-            }
-            "frotar" -> {
-                intent = Intent(this, JuegoFrotarActivity::class.java)
-            }
-            "explotar" -> {
-                intent = Intent(this, JuegoExplotarActivity::class.java)
-            }
-        }
+        val intent = Intent(this, JuegoActivity::class.java)
         intent.putExtra("partida", partida)
         startActivity(intent)
         finish()
@@ -91,6 +79,7 @@ class SalaEsperaActivity : AppCompatActivity() {
         ajustarVistasAPartida(partida!!)
         MiBluetooth.enviarDatos(partida!!.toJson(), MiBluetooth.TipoDatoTransmitido.PARTIDA)
         if (partida!!.jugadores.size >= partida!!.nJugadores){
+            Thread.sleep(200)
             MiBluetooth.enviarDatos(MiBluetooth.Evento.INICIAR_PARTIDA.toJson(), MiBluetooth.TipoDatoTransmitido.EVENTO)
             iniciarPartida()
         }else{

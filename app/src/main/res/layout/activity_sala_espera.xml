@@ -13,8 +13,10 @@
         android:layout_height="0dp"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/btn_reintentar"
-        app:layout_constraintEnd_toEndOf="@+id/btn_confirmar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rv_listaJugadores"
         app:layout_constraintWidth_percent="0.37">
 
@@ -83,20 +85,6 @@
         app:layout_constraintStart_toStartOf="@+id/btn_atras"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.37" />
-
-    <Button
-        android:id="@+id/btn_confirmar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/confirmar"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_atras"
-        app:layout_constraintWidth_percent="0.25" />
 
     <Button
         android:id="@+id/btn_atras"

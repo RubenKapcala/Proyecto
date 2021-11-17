@@ -1,14 +1,17 @@
 package com.juego.proyecto_1s2122.varios.BBDD
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.juego.proyecto_1s2122.R
+import com.juego.proyecto_1s2122.modelo.Juego
 import com.juego.proyecto_1s2122.modelo.Jugador
 
 class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+    private var context: Context = context
     private val db: SQLiteDatabase = this.writableDatabase
 
     companion object{
@@ -26,7 +29,8 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
     fun obtenerUsuario(): Jugador?{
         val nombre: String?
         val alias: String?
-        val cursor = db.query(Tablas.Jugadores.TABLE_NAME, arrayOf(Tablas.Jugadores.COLUMN_nombre, Tablas.Jugadores.COLUMN_alias),
+        val cursor = db.query(Tablas.Jugadores.TABLE_NAME,
+                arrayOf(Tablas.Jugadores.COLUMN_nombre, Tablas.Jugadores.COLUMN_alias),
                 "id = 1", null, null, null, null)
         if (cursor.moveToFirst()){
             nombre = cursor.getString(0)
@@ -38,20 +42,25 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
         return null
     }
 
-    fun obtenerJuegos(): List<Tablas.Juegos>{
-        val rs: ResultSet = db.getResultSet("SELECT COUNT(*) FROM USERS;")
-        val nombre: String?
-        val alias: String?
-        val cursor = db.query(Tablas.Juegos.TABLE_NAME, arrayOf(Tablas.Jugadores.COLUMN_nombre, Tablas.Jugadores.COLUMN_alias),
-                null, null, null, null, null)
-        if (cursor.moveToFirst()){
-            nombre = cursor.getString(0)
-            alias = cursor.getString(1)
-            cursor.close()
-            return Jugador(nombre, alias, 0)
+    @SuppressLint("Range")
+    public fun obtenerJuegos(): List<Juego>{
+        val lista = mutableListOf<Juego>()
+        var id: Int?
+        var nombre: String?
+        var descripcion: String?
+
+        val cursor = db.rawQuery("select * from " + Tablas.Juegos.TABLE_NAME, null)
+
+        while (cursor.moveToNext()) {
+            id = cursor.getInt(cursor.getColumnIndex(Tablas.Juegos.COLUMN_id))
+            nombre = cursor.getString(cursor.getColumnIndex(Tablas.Juegos.COLUMN_nombre))
+            descripcion = cursor.getString(cursor.getColumnIndex(Tablas.Juegos.COLUMN_descripcion))
+            val juego = Juego(id, nombre, descripcion)
+            lista.add(juego)
         }
+
         cursor.close()
-        return null
+        return lista
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -60,10 +69,13 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
                 "${Tablas.Jugadores.COLUMN_nombre} TEXT NOT NULL, " +
                 "${Tablas.Jugadores.COLUMN_alias} TEXT NOT NULL)")
 
+
         db.execSQL("CREATE TABLE IF NOT EXISTS ${Tablas.Juegos.TABLE_NAME} (" +
                 "${Tablas.Juegos.COLUMN_id} INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "${Tablas.Juegos.COLUMN_nombre} TEXT NOT NULL, " +
                 "${Tablas.Juegos.COLUMN_descripcion} TEXT NOT NULL)")
+
+
 
         db.execSQL("CREATE TABLE IF NOT EXISTS ${Tablas.Partidas.TABLE_NAME} (" +
                 "${Tablas.Partidas.COLUMN_id} INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -79,18 +91,18 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
                 "FOREIGN KEY(${Tablas.Partidas_jugadores.COLUMN_id_jugador}) REFERENCES ${Tablas.Jugadores.TABLE_NAME}(${Tablas.Jugadores.COLUMN_id}))")
 
         var values = ContentValues()
-        values.put(Tablas.Juegos.COLUMN_nombre, R.string.pulsar)
-        values.put(Tablas.Juegos.COLUMN_descripcion, R.string.descripcion_pulsar)
+        values.put(Tablas.Juegos.COLUMN_nombre, context.getString(R.string.pulsar))
+        values.put(Tablas.Juegos.COLUMN_descripcion, context.getString(R.string.descripcion_pulsar))
         db.insert(Tablas.Juegos.TABLE_NAME, null, values)
 
         values = ContentValues()
-        values.put(Tablas.Juegos.COLUMN_nombre, R.string.frotar)
-        values.put(Tablas.Juegos.COLUMN_descripcion, R.string.descripcion_frotar)
+        values.put(Tablas.Juegos.COLUMN_nombre, context.getString(R.string.frotar))
+        values.put(Tablas.Juegos.COLUMN_descripcion, context.getString(R.string.descripcion_frotar))
         db.insert(Tablas.Juegos.TABLE_NAME, null, values)
 
         values = ContentValues()
-        values.put(Tablas.Juegos.COLUMN_nombre, R.string.globos)
-        values.put(Tablas.Juegos.COLUMN_descripcion, R.string.descripcion_globos)
+        values.put(Tablas.Juegos.COLUMN_nombre, context.getString(R.string.globos))
+        values.put(Tablas.Juegos.COLUMN_descripcion, context.getString(R.string.descripcion_globos))
         db.insert(Tablas.Juegos.TABLE_NAME, null, values)
 
     }

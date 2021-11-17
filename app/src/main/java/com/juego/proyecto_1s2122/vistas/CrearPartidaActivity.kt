@@ -15,7 +15,7 @@ import java.util.*
 
 class CrearPartidaActivity : AppCompatActivity() {
 
-    val JUGADORES_MAXIMOS = 10
+    val JUGADORES_MAXIMOS = 8
     val JUGADORES_MINIMOS = 2
     private lateinit var binding: ActivityCrearPartidaBinding
     private lateinit var listaJuegos: List<Juego>
@@ -26,7 +26,7 @@ class CrearPartidaActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         var juegoElegido = 0
-        var nJugadores = 2
+        var nJugadores = JUGADORES_MINIMOS
 
         listaJuegos = obtenerListaJuegos()
         ajustarVista(juegoElegido)
@@ -93,14 +93,7 @@ class CrearPartidaActivity : AppCompatActivity() {
 
 
     private fun obtenerListaJuegos(): List<Juego> {
-
-        val lista =
-        return listOf(
-                Juego(0, "pulsar", 0, "El que pulse más rápido durante un minuto gana"),
-                Juego(1, "perseguir", 0, "mata al resto"),
-                Juego(2, "frotar", 0, "el dedo mas rápido"),
-        )
+        return DbHelper(this).obtenerJuegos()
     }
-
 
 }
