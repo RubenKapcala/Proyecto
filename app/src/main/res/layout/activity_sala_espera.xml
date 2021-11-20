@@ -12,24 +12,26 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@+id/btn_reintentar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.6"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rv_listaJugadores"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
         app:layout_constraintWidth_percent="0.37">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/reglas_del_juego"
             android:textColor="@color/colorred"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_descripcionJuego"
-            app:layout_constraintStart_toStartOf="@+id/tv_descripcionJuego" />
+            app:layout_constraintEnd_toEndOf="@+id/tv_descripcionJuego"
+            app:layout_constraintStart_toStartOf="@+id/tv_descripcionJuego"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nombreJuego" />
 
         <TextView
             android:id="@+id/tv_nJugadores"
@@ -80,10 +82,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@+id/btn_atras"
-        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintHeight_percent="0.5"
         app:layout_constraintStart_toStartOf="@+id/btn_atras"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.37" />
 
     <Button
@@ -101,4 +102,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9"
         app:layout_constraintWidth_percent="0.25" />
+
+    <TextView
+        android:id="@+id/tv_listo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listo"
+        android:textColor="@color/colorred"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_atras"
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+        app:layout_constraintTop_toTopOf="@+id/btn_atras" />
+
+    <TextView
+        android:id="@+id/tv_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/jugadores"
+        android:textColor="@color/colorred"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/rv_listaJugadores"
+        app:layout_constraintEnd_toEndOf="@+id/rv_listaJugadores"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="@+id/rv_listaJugadores"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

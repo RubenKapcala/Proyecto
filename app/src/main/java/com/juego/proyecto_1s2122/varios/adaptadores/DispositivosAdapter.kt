@@ -13,8 +13,8 @@ class DispositivosAdapter (private val dataSet: List<BluetoothDevice>,
 ) : RecyclerView.Adapter<DispositivosAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nombre: TextView = view.findViewById(R.id.tv_nombre)
-        val adress: TextView = view.findViewById(R.id.tv_alias)
+        val nombre: TextView = view.findViewById(R.id.tv_nombreDispositivo)
+        val adress: TextView = view.findViewById(R.id.tv_aliasDispositivo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DispositivosAdapter.ViewHolder {

@@ -2,6 +2,8 @@ package com.juego.proyecto_1s2122.vistas
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -79,9 +81,22 @@ class SalaEsperaActivity : AppCompatActivity() {
         ajustarVistasAPartida(partida!!)
         MiBluetooth.enviarDatos(partida!!.toJson(), MiBluetooth.TipoDatoTransmitido.PARTIDA)
         if (partida!!.jugadores.size >= partida!!.nJugadores){
-            Thread.sleep(200)
-            MiBluetooth.enviarDatos(MiBluetooth.Evento.INICIAR_PARTIDA.toJson(), MiBluetooth.TipoDatoTransmitido.EVENTO)
-            iniciarPartida()
+
+            //Pone visible el mensaje para avisar que comienza la partida
+            binding.tvListo.visibility = View.VISIBLE
+
+            //Comienza la cuenta atrás para iniciar el juego
+            object : CountDownTimer(2000, 500){
+                override fun onTick(millisUntilFinished: Long) {
+                    binding.tvListo.text = binding.tvListo.text.toString() + "."
+                }
+
+                override fun onFinish() {//Al terminar inicia el juego
+                    MiBluetooth.enviarDatos(MiBluetooth.Evento.INICIAR_PARTIDA.toJson(), MiBluetooth.TipoDatoTransmitido.EVENTO)
+                    iniciarPartida()
+                }
+            }.start()
+
         }else{
             visibilizarDispositivo()
         }

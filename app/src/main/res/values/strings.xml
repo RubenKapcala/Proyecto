@@ -21,6 +21,7 @@
     <string name="juego">JUEGO</string>
     <string name="reglas_del_juego">REGLAS DEL JUEGO</string>
     <string name="jugadores">Jugadores</string>
+    <string name="listo">Listo</string>
 
     <string name="reintentar">reintentar</string>
     <string name="dispisitivos_encontrados">DISPISITIVOS ENCONTRADOS</string>
@@ -37,10 +38,12 @@
     <string name="globos">Globos</string>
     <string name="descripcion_globos">El que explote mas globos en un minuto gana. Los globos rojos te harán perder 3 puntos. Toca fuera del globo para pasar al siguiente.</string>
 
-    Juego(1, "perseguir", 0, "mata al resto"),
-    Juego(2, "frotar", 0, "el dedo mas rápido"),
-
-
+    <string name="elige_estadisticas">Elige datos a consultar:</string>
+    <string name="partidas">Partidas</string>
+    <string name="nada_seleccionado">Nada seleccionado</string>
+    <string name="todos_jugadores">Todos los jugadores</string>
+    <string name="todas_partidas">Todas las partidas</string>
+    <string name="partidas_de_jugador">Partidas del jugador:</string>
 
     <string name="go">GO</string>
     <string name="fin">Fin</string>

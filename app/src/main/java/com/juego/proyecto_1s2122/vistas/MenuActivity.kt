@@ -33,6 +33,7 @@ class MenuActivity : AppCompatActivity() {
 
         binding.btnCrearPartida.setOnClickListener { startActivity(Intent(this, CrearPartidaActivity::class.java)) }
         binding.btnUnirsePartida.setOnClickListener { startActivity(Intent(this, BuscarPartidaActivity::class.java)) }
+        binding.btnEstadisticas.setOnClickListener { startActivity(Intent(this, EstadisticasActivity::class.java)) }
     }
 
 
