@@ -212,7 +212,7 @@ class JuegoActivity : AppCompatActivity() {
 
     private fun iniciarJuego(){
         funciones.iniciarJuego()
-        object : CountDownTimer(6000, 25){
+        object : CountDownTimer(60000, 25){
             override fun onTick(millisUntilFinished: Long) {
                 val segundos = millisUntilFinished /1000
                 binding.tvTiempo.text = segundos.toString()

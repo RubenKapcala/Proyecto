@@ -34,6 +34,10 @@ class EstadisticasActivity : AppCompatActivity() {
         binding.rvEstadisticas.setHasFixedSize(true)
         binding.rvEstadisticas.layoutManager = LinearLayoutManager(this)
 
+        binding.btnAtrasEstadisticas.setOnClickListener{
+            finish()
+        }
+
         binding.spEstadisticas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
