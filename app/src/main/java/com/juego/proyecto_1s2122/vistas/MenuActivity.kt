@@ -18,7 +18,11 @@ class MenuActivity : AppCompatActivity() {
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        comprobarBluetoothActivado()
+        funcionalidadBotones()
+    }
 
+    private fun comprobarBluetoothActivado() {
         if (!MiBluetooth.esBluetooth){
             val builder = AlertDialog.Builder(this)
             builder.setTitle(R.string.sin_bluetooth)
@@ -29,13 +33,13 @@ class MenuActivity : AppCompatActivity() {
         }else{
             MiBluetooth.activarBluetooth(this)
         }
+    }
 
-
+    private fun funcionalidadBotones() {
         binding.btnCrearPartida.setOnClickListener { startActivity(Intent(this, CrearPartidaActivity::class.java)) }
         binding.btnUnirsePartida.setOnClickListener { startActivity(Intent(this, BuscarPartidaActivity::class.java)) }
         binding.btnEstadisticas.setOnClickListener { startActivity(Intent(this, EstadisticasActivity::class.java)) }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

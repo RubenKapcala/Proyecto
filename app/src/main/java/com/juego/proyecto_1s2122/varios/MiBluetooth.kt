@@ -45,8 +45,8 @@ object MiBluetooth {
     class ListaJugadores(val jugadores: MutableList<Jugador>): Transformable
 
     //Variables referentes a las conexiones
-    var conexionServidor: SendReceive? = null //Conexión con un servidor
-    var conexionesCliente: MutableList<SendReceive?> = mutableListOf() //Conexiones con los clientes
+    private var conexionServidor: SendReceive? = null //Conexión con un servidor
+    private var conexionesCliente: MutableList<SendReceive?> = mutableListOf() //Conexiones con los clientes
     var bluetoothAdapter: BluetoothAdapter? = null
     var eresServidor = false //Nos indica si estás trabajando como servidor o como cliente
 
@@ -269,9 +269,9 @@ object MiBluetooth {
 
     //Crea objetos para gestionar los mensajes de un socket
     class SendReceive(bluetoothSocket: BluetoothSocket) : Thread() {
-        var socket = bluetoothSocket
-        var inputStream: InputStream
-        var outputStream: OutputStream
+        private var socket = bluetoothSocket
+        private var inputStream: InputStream
+        private var outputStream: OutputStream
         private var cerrar = false //Permite finalizar el hilo
 
         init {

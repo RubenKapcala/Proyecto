@@ -16,27 +16,24 @@ import com.juego.proyecto_1s2122.varios.adaptadores.PartidasEstadisticasAdapter
 
 class EstadisticasActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEstadisticasBinding
+    private val consultas = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEstadisticasBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //Crea el spinner con las diferentes consultas
-        val consultas = mutableListOf<String>()
-        consultas.add(getString(R.string.nada_seleccionado))
-        consultas.add(getString(R.string.jugadores))
-        consultas.add(getString(R.string.partidas))
-        val dataAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, consultas)
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spEstadisticas.adapter = dataAdapter
+        configurarSpinner()
 
         binding.rvEstadisticas.setHasFixedSize(true)
         binding.rvEstadisticas.layoutManager = LinearLayoutManager(this)
 
-        binding.btnAtrasEstadisticas.setOnClickListener{
-            finish()
-        }
+        funcionalidadBotones()
+
+    }
+
+    private fun funcionalidadBotones() {
+        binding.btnAtrasEstadisticas.setOnClickListener{ finish() }
 
         binding.spEstadisticas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -64,6 +61,13 @@ class EstadisticasActivity : AppCompatActivity() {
                 // Nada fue seleccionado.
             }
         }
-
     }
+
+    private fun configurarSpinner() {
+        consultas.add(getString(R.string.nada_seleccionado))
+        consultas.add(getString(R.string.jugadores))
+        consultas.add(getString(R.string.partidas))
+        val dataAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, consultas)
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spEstadisticas.adapter = dataAdapter    }
 }

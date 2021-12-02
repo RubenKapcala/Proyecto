@@ -56,6 +56,33 @@ class JuegoActivity : AppCompatActivity() {
         binding.rvPuntuacion.layoutManager = LinearLayoutManager(this)
         adaptarPuntuacion()
 
+        cargarJuego()
+
+        funciones.configurarJuego()
+
+        binding.btnContinuar.setOnClickListener{ finish() }
+
+
+        //Comienza la cuenta atrás para iniciar el juego
+        object : CountDownTimer(6000, 1000){
+            override fun onTick(millisUntilFinished: Long) {
+                val segundos = millisUntilFinished /1000
+                if (segundos > 3){
+                    binding.tvTiempo.text = ""
+                }else{
+                    binding.tvTiempo.text = segundos.toString()
+                }
+            }
+
+            override fun onFinish() {//Al terminar inicia el juego
+                binding.tvTiempo.text = getText(R.string.go)
+                iniciarJuego()
+            }
+        }.start()
+
+    }
+
+    private fun cargarJuego() {
         when(partida.juego.nombre){
 
             getString(R.string.pulsar) -> {
@@ -87,11 +114,11 @@ class JuegoActivity : AppCompatActivity() {
             }
 
             getString(R.string.frotar) -> {
-                binding.ivPistaFrotar.visibility = View.VISIBLE
 
                 funciones = object : Funciones {
                     @SuppressLint("ClickableViewAccessibility")
                     override fun configurarJuego() {
+                        binding.ivPistaFrotar.visibility = View.INVISIBLE
                         binding.ivPistaFrotar.setOnTouchListener(View.OnTouchListener { view, motionEvent ->
                             when (motionEvent.action) {
 
@@ -125,6 +152,7 @@ class JuegoActivity : AppCompatActivity() {
                     }
 
                     override fun iniciarJuego() {
+                        binding.ivPistaFrotar.visibility = View.VISIBLE
                         ancho_iv = binding.ivPistaFrotar.width
                         alto_iv = binding.ivPistaFrotar.height
                         binding.ivPistaFrotar.isEnabled = true
@@ -132,6 +160,7 @@ class JuegoActivity : AppCompatActivity() {
 
                     override fun terminarJuego() {
                         binding.ivPistaFrotar.isEnabled = false
+                        binding.ivPistaFrotar.visibility = View.GONE
                     }
 
                     override fun cadaTick() {
@@ -185,29 +214,6 @@ class JuegoActivity : AppCompatActivity() {
                 }
             }
         }
-
-        funciones.configurarJuego()
-
-        binding.btnContinuar.setOnClickListener{ finish() }
-
-
-        //Comienza la cuenta atrás para iniciar el juego
-        object : CountDownTimer(6000, 1000){
-            override fun onTick(millisUntilFinished: Long) {
-                val segundos = millisUntilFinished /1000
-                if (segundos > 3){
-                    binding.tvTiempo.text = ""
-                }else{
-                    binding.tvTiempo.text = segundos.toString()
-                }
-            }
-
-            override fun onFinish() {//Al terminar inicia el juego
-                binding.tvTiempo.text = getText(R.string.go)
-                iniciarJuego()
-            }
-        }.start()
-
     }
 
     private fun iniciarJuego(){

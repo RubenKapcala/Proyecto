@@ -14,6 +14,8 @@ class CrearPartidaActivity : AppCompatActivity() {
 
     val JUGADORES_MAXIMOS = 8
     val JUGADORES_MINIMOS = 2
+    private var nJugadores = JUGADORES_MINIMOS
+    private var juegoElegido = 0
     private lateinit var binding: ActivityCrearPartidaBinding
     private lateinit var listaJuegos: List<Juego>
 
@@ -22,14 +24,13 @@ class CrearPartidaActivity : AppCompatActivity() {
         binding = ActivityCrearPartidaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var juegoElegido = 0
-        var nJugadores = JUGADORES_MINIMOS
-
-        listaJuegos = obtenerListaJuegos()
+        listaJuegos = DbHelper(this).obtenerJuegos()
         ajustarVista(juegoElegido)
 
+        funcionalidadBotones()
+    }
 
-        //Damos funcionalidad a los botones
+    private fun funcionalidadBotones() {
 
         binding.btnJuegoAnterior.setOnClickListener{
             if (juegoElegido == 0){
@@ -61,7 +62,6 @@ class CrearPartidaActivity : AppCompatActivity() {
             binding.tvJugadores.text = nJugadores.toString()
         }
 
-
         binding.btnAtras.setOnClickListener {finish()}
 
         binding.btnConfirmar.setOnClickListener{
@@ -73,24 +73,15 @@ class CrearPartidaActivity : AppCompatActivity() {
         }
     }
 
-
     private fun ajustarVista(juegoElegido: Int){
         binding.tvJuego.text = listaJuegos[juegoElegido].nombre
         binding.tvDescripcionJuego.text = listaJuegos[juegoElegido].descripcion
     }
 
-
     private fun crearPartida(juegoElegido: Int, jugadores: Int): Partida {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("ES"))
         val currentDate = sdf.format(Date())
         return Partida(mutableListOf(DbHelper(this).obtenerUsuario()!!), listaJuegos[juegoElegido], jugadores, currentDate)
-    }
-
-    //esto ya lo ire haciendo
-
-
-    private fun obtenerListaJuegos(): List<Juego> {
-        return DbHelper(this).obtenerJuegos()
     }
 
 }

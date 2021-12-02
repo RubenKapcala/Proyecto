@@ -26,16 +26,17 @@ class BuscarPartidaActivity : AppCompatActivity() {
         binding = ActivityBuacarPartidaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         binding.rvPartidas.setHasFixedSize(true)
         binding.rvPartidas.layoutManager = LinearLayoutManager(this)
 
+        funcionalidadBotones()
         buscarDispositivos()
 
+    }
+
+    private fun funcionalidadBotones() {
         binding.btnAtras.setOnClickListener { finish()}
-        binding.btnReintentar.setOnClickListener {
-            buscarDispositivos()
-        }
+        binding.btnReintentar.setOnClickListener { buscarDispositivos() }
     }
 
 

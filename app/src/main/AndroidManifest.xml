@@ -2,15 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.juego.proyecto_1s2122">
+
     <!-- Solicitar permisos de Bluetooth heredados en dispositivos más antiguos. -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- Necesario para buscar dispositivos superiores a api 31. -->
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation"
-        tools:targetApi="31" /> <!-- Necesario para visibilizar dispositivos superiores a api 31. -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" /> <!-- Necesario para conectar dispositivos superiores a api 31. -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- Necesario para buscar dispositivos superiores a api 23. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- Necesario para buscar dispositivos superiores a api 23. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
