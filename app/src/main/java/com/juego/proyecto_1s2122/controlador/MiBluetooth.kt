@@ -1,4 +1,4 @@
-package com.juego.proyecto_1s2122.varios
+package com.juego.proyecto_1s2122.controlador
 
 import android.Manifest
 import android.app.Activity

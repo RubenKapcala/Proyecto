@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.juego.proyecto_1s2122.databinding.ActivityCrearUsuarioBinding
-import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
+import com.juego.proyecto_1s2122.modelo.BBDD.DbHelper
 
 class CrearUsuarioActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCrearUsuarioBinding

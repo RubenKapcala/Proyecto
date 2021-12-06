@@ -7,13 +7,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityBuacarPartidaBinding
-import com.juego.proyecto_1s2122.varios.MiBluetooth
-import com.juego.proyecto_1s2122.varios.adaptadores.DispositivosAdapter
+import com.juego.proyecto_1s2122.controlador.MiBluetooth
+import com.juego.proyecto_1s2122.vistas.adaptadores.DispositivosAdapter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

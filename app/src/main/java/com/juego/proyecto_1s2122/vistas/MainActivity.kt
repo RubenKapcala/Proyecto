@@ -9,7 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
 import com.juego.proyecto_1s2122.databinding.ActivityMainBinding
-import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
+import com.juego.proyecto_1s2122.modelo.BBDD.DbHelper
 
 
 class MainActivity : AppCompatActivity() {

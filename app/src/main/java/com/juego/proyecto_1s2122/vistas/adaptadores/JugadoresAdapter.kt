@@ -1,4 +1,4 @@
-package com.juego.proyecto_1s2122.varios.adaptadores
+package com.juego.proyecto_1s2122.vistas.adaptadores
 
 import android.view.LayoutInflater
 import android.view.View

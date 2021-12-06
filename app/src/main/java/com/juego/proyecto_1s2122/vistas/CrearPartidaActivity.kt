@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.juego.proyecto_1s2122.databinding.ActivityCrearPartidaBinding
 import com.juego.proyecto_1s2122.modelo.Juego
 import com.juego.proyecto_1s2122.modelo.Partida
-import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
+import com.juego.proyecto_1s2122.modelo.BBDD.DbHelper
 import java.text.SimpleDateFormat
 import java.util.*
 

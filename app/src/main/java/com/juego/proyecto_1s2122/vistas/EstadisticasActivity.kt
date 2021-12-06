@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityEstadisticasBinding
-import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
-import com.juego.proyecto_1s2122.varios.adaptadores.JugadoresEstadisticasAdapter
-import com.juego.proyecto_1s2122.varios.adaptadores.PartidasEstadisticasAdapter
+import com.juego.proyecto_1s2122.modelo.BBDD.DbHelper
+import com.juego.proyecto_1s2122.vistas.adaptadores.JugadoresEstadisticasAdapter
+import com.juego.proyecto_1s2122.vistas.adaptadores.PartidasEstadisticasAdapter
 
 
 class EstadisticasActivity : AppCompatActivity() {

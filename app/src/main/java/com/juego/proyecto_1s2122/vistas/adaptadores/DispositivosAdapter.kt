@@ -1,4 +1,4 @@
-package com.juego.proyecto_1s2122.varios.adaptadores
+package com.juego.proyecto_1s2122.vistas.adaptadores
 
 import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.juego.proyecto_1s2122.R
-import com.juego.proyecto_1s2122.varios.MiBluetooth
+import com.juego.proyecto_1s2122.controlador.MiBluetooth
 
 class DispositivosAdapter (private val dataSet: List<BluetoothDevice>,
 ) : RecyclerView.Adapter<DispositivosAdapter.ViewHolder>() {

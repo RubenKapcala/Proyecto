@@ -2,13 +2,11 @@ package com.juego.proyecto_1s2122.vistas
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityMenuBinding
-import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
-import com.juego.proyecto_1s2122.varios.MiBluetooth
+import com.juego.proyecto_1s2122.controlador.MiBluetooth
 
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding

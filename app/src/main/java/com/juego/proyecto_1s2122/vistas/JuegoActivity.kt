@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.juego.proyecto_1s2122.R
 import com.juego.proyecto_1s2122.databinding.ActivityJuegoBinding
 import com.juego.proyecto_1s2122.modelo.Partida
-import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
-import com.juego.proyecto_1s2122.varios.MiBluetooth
-import com.juego.proyecto_1s2122.varios.adaptadores.JugadoresJuegoAdapter
+import com.juego.proyecto_1s2122.modelo.BBDD.DbHelper
+import com.juego.proyecto_1s2122.controlador.MiBluetooth
+import com.juego.proyecto_1s2122.vistas.adaptadores.JugadoresJuegoAdapter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

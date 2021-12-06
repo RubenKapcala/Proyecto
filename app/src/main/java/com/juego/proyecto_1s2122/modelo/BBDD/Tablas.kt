@@ -1,4 +1,4 @@
-package com.juego.proyecto_1s2122.varios.BBDD
+package com.juego.proyecto_1s2122.modelo.BBDD
 
 class Tablas {
     abstract class Jugadores{

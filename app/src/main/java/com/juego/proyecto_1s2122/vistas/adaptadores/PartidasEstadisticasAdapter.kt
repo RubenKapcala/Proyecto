@@ -1,4 +1,4 @@
-package com.juego.proyecto_1s2122.varios.adaptadores
+package com.juego.proyecto_1s2122.vistas.adaptadores
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,9 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.juego.proyecto_1s2122.R
-import com.juego.proyecto_1s2122.modelo.Jugador
 import com.juego.proyecto_1s2122.modelo.Partida
-import com.juego.proyecto_1s2122.varios.BBDD.DbHelper
 
 class PartidasEstadisticasAdapter (val context: Context,private val dataSet: List<Partida>
 ) : RecyclerView.Adapter<PartidasEstadisticasAdapter.ViewHolder>() {
