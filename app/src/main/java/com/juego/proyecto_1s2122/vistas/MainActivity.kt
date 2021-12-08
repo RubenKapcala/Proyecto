@@ -13,7 +13,7 @@ import com.juego.proyecto_1s2122.modelo.BBDD.DbHelper
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding : ActivityMainBinding
+    lateinit var binding : ActivityMainBinding //Binding con los elementos gráficos
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val al = metrics.heightPixels.toFloat() // alto absoluto en pixels
 
 
-        //Creamos una animación para cada atributo que queremos animar de la imagen de presentación
+        //Crea una animación para cada atributo que queremos animar de la imagen de presentación
         val aniRota = ObjectAnimator.ofFloat(binding.imagenPresentacion, "rotation", 0f, 360f, 0f)
         aniRota.duration = 2000
         val aniAlfa = ObjectAnimator.ofFloat(binding.imagenPresentacion, View.ALPHA, 0f, 0.6f, 1f, 1f)
@@ -67,11 +67,13 @@ class MainActivity : AppCompatActivity() {
 
                 aniAlfa.addListener(onEnd = {
                     if (DbHelper(this).obtenerUsuario() != null){
+                        //Abre el menú
                         startActivity(Intent(this, MenuActivity::class.java))
-                        finish()
+                        finish() //Cierra la activity
                     }else{
+                        //Abre la activity de crear usuario
                         startActivity(Intent(this, CrearUsuarioActivity::class.java))
-                        finish()
+                        finish() //Cierra la activity
                     }
                 })
             })

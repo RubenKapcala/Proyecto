@@ -1,5 +1,6 @@
 package com.juego.proyecto_1s2122.modelo.BBDD
 
+//Descripción de las tablas
 class Tablas {
     abstract class Jugadores{
         companion object{

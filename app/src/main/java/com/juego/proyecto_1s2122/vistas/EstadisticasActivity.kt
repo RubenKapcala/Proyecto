@@ -15,7 +15,7 @@ import com.juego.proyecto_1s2122.vistas.adaptadores.PartidasEstadisticasAdapter
 
 
 class EstadisticasActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityEstadisticasBinding
+    private lateinit var binding: ActivityEstadisticasBinding //Binding con los elementos gráficos
     private val consultas = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,9 +32,12 @@ class EstadisticasActivity : AppCompatActivity() {
 
     }
 
+    //Da la funcionalidad a los botones
     private fun funcionalidadBotones() {
-        binding.btnAtrasEstadisticas.setOnClickListener{ finish() }
 
+        binding.btnAtrasEstadisticas.setOnClickListener{ finish() } //Cierra la activity
+
+        //Carga los datos de la búsqueda dependiendo de la opción elegida
         binding.spEstadisticas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
@@ -63,6 +66,7 @@ class EstadisticasActivity : AppCompatActivity() {
         }
     }
 
+    //Establece el spinner con los datos y los atributos deseados
     private fun configurarSpinner() {
         consultas.add(getString(R.string.nada_seleccionado))
         consultas.add(getString(R.string.jugadores))

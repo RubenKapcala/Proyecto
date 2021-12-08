@@ -17,13 +17,14 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class BuscarPartidaActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityBuacarPartidaBinding
+    private lateinit var binding: ActivityBuacarPartidaBinding //Binding con los elementos gráficos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBuacarPartidaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Prepara el reciclerView
         binding.rvPartidas.setHasFixedSize(true)
         binding.rvPartidas.layoutManager = LinearLayoutManager(this)
 
@@ -32,26 +33,27 @@ class BuscarPartidaActivity : AppCompatActivity() {
 
     }
 
+    //Da la funcionalidad a los botones
     private fun funcionalidadBotones() {
-        binding.btnAtras.setOnClickListener { finish()}
-        binding.btnReintentar.setOnClickListener { buscarDispositivos() }
+        binding.btnAtras.setOnClickListener { finish()} //Cierra esta activity
+        binding.btnReintentar.setOnClickListener { buscarDispositivos() } //Realiza una búsqueda
     }
 
-
+    //Se comunica con el objeto MiBluetooth para que inicie una nueva búsqueda y se ocupa de mostrar al usuario los resultados
     private fun buscarDispositivos(){
 
-        val dispositivosEncontrados = ArrayList<BluetoothDevice>()
-
+        val dispositivosEncontrados = ArrayList<BluetoothDevice>() //Inicializa una lista de dispositivos vacía
 
         MiBluetooth.buscarDispisitivos(this, object: MiBluetooth.BuscarDispositivosInterface{
 
             override fun alEmpezar() {
-                dispositivosEncontrados.clear()
-                binding.rvPartidas.adapter?.notifyDataSetChanged()
-                binding.pbBuscarDispositivos.visibility = View.VISIBLE
+                dispositivosEncontrados.clear() //Limpia la lista de dispositivos
+                binding.rvPartidas.adapter?.notifyDataSetChanged() //Recarga la vista
+                binding.pbBuscarDispositivos.visibility = View.VISIBLE //Pone la progressBar visible
             }
 
             override fun alEncontrar(device: BluetoothDevice) {
+                //Si el dispositivo encontrado no pertenece a la lista lo añade y carga la vista
                 if (!dispositivosEncontrados.contains(device)){
                     dispositivosEncontrados.add(device)
                     binding.rvPartidas.adapter = DispositivosAdapter(dispositivosEncontrados)
@@ -59,10 +61,11 @@ class BuscarPartidaActivity : AppCompatActivity() {
             }
 
             override fun alTerminar() {
-                binding.pbBuscarDispositivos.visibility = View.GONE
+                binding.pbBuscarDispositivos.visibility = View.GONE //Pone la progressBar invisible
             }
 
             override fun siYaEstaBuscando() {
+                //Muestra un mensaje informando que ya se está realizando la búsqueda
                 Toast.makeText(this@BuscarPartidaActivity, R.string.ya_buscando, Toast.LENGTH_LONG).show()
             }
 
@@ -70,9 +73,11 @@ class BuscarPartidaActivity : AppCompatActivity() {
 
     }
 
+    //Recibe los cambios de estado de la conexión bluetooth
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventEstado(estado: MiBluetooth.Estado) {
 
+        //Muestra un mensaje para informar que se encuentra en ese nuevo estado
         when(estado){
             MiBluetooth.Estado.STATE_CONNECTING -> Toast.makeText(
                 this,
@@ -94,9 +99,7 @@ class BuscarPartidaActivity : AppCompatActivity() {
         }
     }
 
-
-
-
+    //Gestiona la respuesta del usuario tras pedirle los permisos necesarios para la búsqueda
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -112,11 +115,13 @@ class BuscarPartidaActivity : AppCompatActivity() {
         }
     }
 
+    //Se registra en EventBus
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
     }
 
+    //Cancela el registro en EventBus
     override fun onPause() {
         super.onPause()
         MiBluetooth.bluetoothAdapter?.cancelDiscovery()

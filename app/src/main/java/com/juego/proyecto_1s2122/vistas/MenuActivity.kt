@@ -9,7 +9,7 @@ import com.juego.proyecto_1s2122.databinding.ActivityMenuBinding
 import com.juego.proyecto_1s2122.controlador.MiBluetooth
 
 class MenuActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMenuBinding
+    private lateinit var binding: ActivityMenuBinding //Binding con los elementos gráficos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +20,7 @@ class MenuActivity : AppCompatActivity() {
         funcionalidadBotones()
     }
 
+    //Comprueba si el dispositivo tiene la tecnología bluetooth y si está activa
     private fun comprobarBluetoothActivado() {
         if (!MiBluetooth.esBluetooth){
             val builder = AlertDialog.Builder(this)
@@ -29,21 +30,25 @@ class MenuActivity : AppCompatActivity() {
             builder.setPositiveButton(R.string.aceptar) { _, _ -> finish() }
             builder.show()
         }else{
+            //Si tiene bluetooth comprueba si está activado y de no estarlo intenta activarlo
             MiBluetooth.activarBluetooth(this)
         }
     }
 
+    //Da la funcionalidad a los botones
     private fun funcionalidadBotones() {
+        //Mueve al usuario entre las diferentes activities
         binding.btnCrearPartida.setOnClickListener { startActivity(Intent(this, CrearPartidaActivity::class.java)) }
         binding.btnUnirsePartida.setOnClickListener { startActivity(Intent(this, BuscarPartidaActivity::class.java)) }
         binding.btnEstadisticas.setOnClickListener { startActivity(Intent(this, EstadisticasActivity::class.java)) }
     }
 
+    //Controla la respuesta del usuario cuando de le pide activar el bluetooth
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MiBluetooth.REQUEST_ENABLE_BLUETOOTH) {
             if (resultCode != RESULT_OK) {
-                MiBluetooth.activarBluetooth(this)
+                MiBluetooth.activarBluetooth(this) //Vuelve a pedir que se active
             }
         }
     }
